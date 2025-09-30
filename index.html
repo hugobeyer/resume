@@ -52,7 +52,7 @@
     @property --role {
       syntax: '<color>';
       inherits: true;
-      initial-value: #ffffff;
+      initial-value: #76dfb7;
     }
 
     :root {
@@ -64,7 +64,7 @@
       --chip: #2a2a2a;
       --rule: #404040;
       --gutter: #333333;
-      --role: #ffffff;
+      --role: #35dacc;
       --page-w: 1100px;
       --gap: 14px;
       --radius: 14px;
@@ -583,7 +583,7 @@
       gap: 8px;
       margin-top: 8px
     }
-
+    
     .chip {
       background: var(--chip);
       padding: 4px 10px;
@@ -600,7 +600,7 @@
     .role {
       font-weight: 1200;
       font-size: 18px;
-      color: var(--role);
+      color: var(--complementary);
     }
 
     .where {
@@ -848,6 +848,10 @@
       border-right: 2px solid var(--accent);
       white-space: nowrap;
       animation: blink-caret 1s step-end infinite;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 4px 8px;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     }
 
     .sassy-message.done-typing {
@@ -1282,7 +1286,17 @@
       const gutterLight = bgLight + 3 + Math.random() * 7;
       const gutterColor = hslToHex(gutterHue, gutterSat, gutterLight);
 
-      const roleColor = '#ffffff';
+      // 🎭 ROLE COLOR - Dynamic with complementary gradient
+      const roleHue = accentHue + (Math.random() - 0.5) * 30; // Related to accent but varied
+      const roleSat = 70 + Math.random() * 30; // Vibrant saturation
+      const roleLight = 55 + Math.random() * 20; // Medium brightness
+      const roleColor = hslToHex(roleHue, roleSat, roleLight);
+
+      // 🎨 COMPLEMENTARY COLOR - True color wheel complement
+      const complementaryHue = (roleHue + 180) % 360; // 180 degrees opposite on color wheel
+      const complementarySat = roleSat * (0.8 + Math.random() * 0.4); // Similar saturation with variation
+      const complementaryLight = roleLight + (Math.random() - 0.5) * 20; // Similar brightness with variation
+      const complementaryColor = hslToHex(complementaryHue, complementarySat, complementaryLight);
 
       // ✅ Validate contrast ratios - relaxed for more variety
       const fgContrast = getContrastRatio(fgColor, bgColor);
@@ -1309,7 +1323,8 @@
 
       return {
         bg: bgColor, fg: fgColor, muted: mutedColor, accent: accentColor,
-        link: linkColor, chip: chipColor, rule: ruleColor, gutter: gutterColor, role: roleColor
+        link: linkColor, chip: chipColor, rule: ruleColor, gutter: gutterColor,
+        role: roleColor, complementary: complementaryColor
       };
     }
 
@@ -1431,7 +1446,138 @@
       'working overtime',
       'the grind never stops',
       'hustle culture',
-      'sigma mindset'
+      'sigma mindset',
+      'youre unstoppable',
+      'cant stop wont stop',
+      'the button calls to you',
+      'resistance is futile',
+      'welcome to the dark side',
+      'youre one of us now',
+      'the clicking has begun',
+      'no turning back',
+      'commitment level: maximum',
+      'youre all in',
+      'the dice have been cast',
+      'fate has spoken',
+      'the prophecy unfolds',
+      'you are the chosen one',
+      'the button chose you',
+      'destiny awaits',
+      'your journey begins',
+      'level up',
+      'achievement unlocked',
+      'new personal record',
+      'youre on fire',
+      'hot streak incoming',
+      'lucky number seven',
+      'the stars align',
+      'cosmic convergence',
+      'universal approval',
+      'the matrix has you',
+      'reality is bending',
+      'physics be damned',
+      'defying gravity',
+      'breaking the laws',
+      'rebel without a cause',
+      'troublemaker extraordinaire',
+      'professional button clicker',
+      'certified theme enthusiast',
+      'color theory expert',
+      'design wizard',
+      'UI sorcerer',
+      'frontend magician',
+      'code conjurer',
+      'pixel perfect',
+      'attention to detail',
+      'quality assurance',
+      'beta tester supreme',
+      'user experience guru',
+      'interaction designer',
+      'behavioral psychologist',
+      'human factors expert',
+      'ergonomics champion',
+      'usability ninja',
+      'accessibility advocate',
+      'inclusive design pioneer',
+      'universal design master',
+      'empathy engineer',
+      'user-centered designer',
+      'human-computer interaction',
+      'cognitive load manager',
+      'mental model mapper',
+      'information architect',
+      'content strategist',
+      'communication designer',
+      'visual storyteller',
+      'brand experience creator',
+      'customer journey mapper',
+      'touchpoint optimizer',
+      'conversion rate hacker',
+      'growth hacker',
+      'marketing technologist',
+      'digital strategist',
+      'social media sorcerer',
+      'content creator',
+      'storyteller supreme',
+      'narrative architect',
+      'experience curator',
+      'cultural commentator',
+      'trend forecaster',
+      'future thinker',
+      'innovation catalyst',
+      'disruptive thinker',
+      'change agent',
+      'transformation leader',
+      'strategic visionary',
+      'business innovator',
+      'market disruptor',
+      'industry shaker',
+      'paradigm shifter',
+      'status quo breaker',
+      'conventional wisdom challenger',
+      'creative revolutionary',
+      'artistic anarchist',
+      'design rebel',
+      'aesthetic revolutionary',
+      'visual provocateur',
+      'color revolutionary',
+      'typography terrorist',
+      'layout liberator',
+      'grid breaker',
+      'whitespace warrior',
+      'negative space ninja',
+      'contrast commander',
+      'hierarchy hero',
+      'balance master',
+      'proportion prince',
+      'scale sultan',
+      'rhythm ruler',
+      'pattern pioneer',
+      'texture titan',
+      'material master',
+      'surface specialist',
+      'finish fanatic',
+      'detail demon',
+      'precision perfectionist',
+      'quality queen',
+      'excellence emperor',
+      'mastery monarch',
+      'skill sovereign',
+      'talent titan',
+      'genius guru',
+      'brilliance baron',
+      'intelligence icon',
+      'wisdom wizard',
+      'knowledge knight',
+      'learning lord',
+      'curiosity champion',
+      'discovery duke',
+      'exploration earl',
+      'adventure admiral',
+      'quest captain',
+      'journey general',
+      'pathfinder prince',
+      'trailblazer king'
     ];
     
     // Reset click count on page load (doesn't persist)
@@ -1481,10 +1627,10 @@
           } else {
             // Stop cursor blinking when typing is done
             msgElement.classList.add('done-typing');
-            // Fade out after 15 seconds when typing is complete
+            // Fade out after 3 seconds when typing is complete
             messageTimeout = setTimeout(() => {
               msgElement.classList.remove('show');
-            }, 15000);
+            }, 3000);
           }
         }
 
