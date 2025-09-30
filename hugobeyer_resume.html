@@ -1,0 +1,1693 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hugo Beyer — Technical Artist</title>
+  <meta name="description"
+    content="Resume — Hugo Beyer, Technical Artist focused on procedural tools and real‑time workflows (Houdini, Unreal, Unity, Godot)." />
+  <style>
+    /* Register CSS properties as animatable */
+    @property --bg {
+      syntax: '<color>';
+      inherits: true;
+      initial-value: #1a1a1a;
+    }
+    @property --fg {
+      syntax: '<color>';
+      inherits: true;
+      initial-value: #e6e6e6;
+    }
+    @property --muted {
+      syntax: '<color>';
+      inherits: true;
+      initial-value: #b3b3b3;
+    }
+    @property --accent {
+      syntax: '<color>';
+      inherits: true;
+      initial-value: #ff6600;
+    }
+    @property --link {
+      syntax: '<color>';
+      inherits: true;
+      initial-value: #ffaa00;
+    }
+    @property --chip {
+      syntax: '<color>';
+      inherits: true;
+      initial-value: #2a2a2a;
+    }
+    @property --rule {
+      syntax: '<color>';
+      inherits: true;
+      initial-value: #404040;
+    }
+    @property --gutter {
+      syntax: '<color>';
+      inherits: true;
+      initial-value: #333333;
+    }
+    @property --role {
+      syntax: '<color>';
+      inherits: true;
+      initial-value: #ffffff;
+    }
+
+    :root {
+      --bg: #1a1a1a;
+      --fg: #e6e6e6;
+      --muted: #b3b3b3;
+      --accent: #ff6600;
+      --link: #ffaa00;
+      --chip: #2a2a2a;
+      --rule: #404040;
+      --gutter: #333333;
+      --role: #ffffff;
+      --page-w: 1100px;
+      --gap: 14px;
+      --radius: 14px;
+      
+      /* Animate the CSS variables themselves */
+      transition: --bg 0.8s ease, --fg 0.8s ease, --muted 0.8s ease, --accent 0.8s ease, 
+                  --link 0.8s ease, --chip 0.8s ease, --rule 0.8s ease, --gutter 0.8s ease, --role 0.8s ease;
+    }
+
+    html,
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font: 15px/1.6 Consolas, SFMono-Regular, Menlo, Monaco, "Liberation Mono", ui-monospace, monospace;
+    }
+    
+    /* Character flash with noise */
+    @keyframes charFlashNoise {
+      0% { 
+        background-color: transparent;
+        color: inherit;
+        box-shadow: none;
+        filter: none;
+      }
+      10% {
+        background-color: var(--accent);
+        color: var(--bg);
+        box-shadow: 0 0 4px var(--accent);
+        filter: contrast(1.2) brightness(1.1);
+      }
+      20% {
+        background-color: transparent;
+        filter: contrast(1.1);
+      }
+      30% {
+        background-color: var(--link);
+        color: var(--bg);
+        box-shadow: 0 0 4px var(--link);
+        filter: contrast(1.2) brightness(1.1);
+      }
+      50% {
+        background-color: var(--accent);
+        color: var(--bg);
+        filter: contrast(1.15);
+      }
+      100% { 
+        background-color: transparent;
+        color: inherit;
+        box-shadow: none;
+        filter: none;
+      }
+    }
+    
+    /* Noise background for glitch areas */
+    @keyframes noiseFlicker {
+      0%, 100% { opacity: 0; }
+      10% { opacity: 0.15; }
+      20% { opacity: 0.05; }
+      30% { opacity: 0.2; }
+      40% { opacity: 0.08; }
+      50% { opacity: 0.18; }
+      60% { opacity: 0.06; }
+      70% { opacity: 0.15; }
+      80% { opacity: 0.1; }
+      90% { opacity: 0.12; }
+    }
+    
+    /* Character glitch - EXTREME varied timings with noise fade */
+    @keyframes charFlashFadeNoise {
+      0% { 
+        background-color: transparent;
+        color: inherit;
+        box-shadow: none;
+        filter: none;
+      }
+      15% {
+        background-color: var(--accent);
+        color: var(--bg);
+        box-shadow: 0 0 6px var(--accent);
+        filter: contrast(1.3) brightness(1.2) saturate(1.5);
+      }
+      35% {
+        background-color: var(--link);
+        color: var(--bg);
+        box-shadow: 0 0 4px var(--link);
+        filter: contrast(1.2) brightness(1.1) blur(0.3px);
+      }
+      60% {
+        background-color: var(--accent);
+        color: var(--bg);
+        filter: contrast(1.1) blur(0.5px);
+      }
+      100% { 
+        background-color: transparent;
+        color: inherit;
+        box-shadow: none; 
+        filter: blur(0.8px) opacity(0);
+      }
+    }
+    
+    /* Base glitch animation - timing set via inline styles */
+    .char-glitch {
+      animation: charFlashFadeNoise 0.3s ease-out;
+    }
+    
+    /* Noise overlay for glitch rows */
+    .glitch-row-active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='6.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E");
+      opacity: 0;
+      animation: noiseFlicker 0.4s ease-in-out;
+      pointer-events: none;
+      z-index: 0;
+      mix-blend-mode: overlay;
+    }
+    
+    .glitch-row-active {
+      position: relative;
+    }
+    
+    /* Row blink effect - no character changes */
+    @keyframes rowBlink {
+      0%, 100% { 
+        opacity: 1;
+        filter: none;
+      }
+      15% { 
+        opacity: 0.3;
+        filter: brightness(1.3) contrast(1.2);
+      }
+      30% {
+        opacity: 1;
+        filter: none;
+      }
+      45% {
+        opacity: 0.5;
+        filter: brightness(1.1);
+      }
+      60% {
+        opacity: 1;
+      }
+    }
+    
+    .row-blink {
+      animation: rowBlink 0.4s ease-in-out;
+    }
+    
+    /* Waterfall glitch with noise */
+    @keyframes waterfallNoise {
+      0% {
+        clip-path: inset(0 0 100% 0);
+        filter: none;
+      }
+      20% {
+        clip-path: inset(0 0 60% 0);
+        filter: brightness(1.4) saturate(1.3) blur(0.5px);
+      }
+      40% {
+        clip-path: inset(0 0 30% 0);
+        filter: brightness(1.2) contrast(1.3);
+      }
+      60% {
+        clip-path: inset(0 0 10% 0);
+        filter: brightness(1.1) blur(0.3px);
+      }
+      80% {
+        clip-path: inset(0 0 0% 0);
+        filter: brightness(1.3);
+      }
+      100% {
+        clip-path: inset(0 0 0% 0);
+        filter: none;
+      }
+    }
+    
+    .row-waterfall {
+      position: relative;
+    }
+    
+    .row-waterfall::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.6'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
+      mix-blend-mode: overlay;
+      animation: waterfallNoise 0.6s ease-out;
+    }
+    
+    /* VSYNC tear effect */
+    @keyframes vsyncTear {
+      0%, 100% {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      10% {
+        transform: translateX(-8px);
+        opacity: 0.8;
+      }
+      20% {
+        transform: translateX(12px);
+        opacity: 0.9;
+      }
+      30% {
+        transform: translateX(-5px);
+        opacity: 0.85;
+      }
+      40% {
+        transform: translateX(7px);
+        opacity: 0.95;
+      }
+      50% {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes scanlineTear {
+      0%, 100% {
+        background-position: 0 0;
+        opacity: 0;
+      }
+      50% {
+        background-position: 0 100%;
+        opacity: 0.4;
+      }
+    }
+    
+    .vsync-glitch {
+      animation: vsyncTear 0.25s ease-in-out;
+      position: relative;
+    }
+    
+    .vsync-glitch::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        var(--accent) 2px,
+        var(--accent) 3px
+      );
+      background-size: 100% 6px;
+      pointer-events: none;
+      z-index: 10;
+      animation: scanlineTear 0.25s linear;
+      mix-blend-mode: screen;
+      opacity: 0.3;
+    }
+    
+    /* VEX console at bottom */
+    .vex-code-overlay {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      border-top: 1px solid var(--accent);
+      padding: 12px 20px;
+      font-family: Consolas, monospace;
+      font-size: 12px;
+      color: var(--fg);
+      pointer-events: none;
+      z-index: 1000;
+      max-height: 150px;
+      overflow: hidden;
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+    }
+    
+    .vex-line {
+      margin: 3px 0;
+      opacity: 0;
+      color: var(--muted);
+      transition: opacity 0.8s ease-out;
+      display: flex;
+      align-items: baseline;
+    }
+    
+    .vex-line.typing {
+      opacity: 1;
+      color: var(--accent);
+    }
+    
+    .vex-line.visible {
+      opacity: 0.6;
+      color: var(--muted);
+    }
+    
+    .vex-line.fading {
+      opacity: 0;
+    }
+    
+    .vex-line pre {
+      margin: 0;
+      display: inline;
+    }
+    
+    /* Line numbers */
+    .vex-line::before {
+      content: attr(data-line-num);
+      color: var(--muted);
+      opacity: 0.3;
+      margin-right: 12px;
+      min-width: 25px;
+      text-align: right;
+      font-size: 10px;
+    }
+    
+    /* Indentation - very subtle */
+    .vex-line[data-indent="1"] { padding-left: 8px; }
+    .vex-line[data-indent="2"] { padding-left: 16px; }
+    .vex-line[data-indent="3"] { padding-left: 24px; }
+    .vex-line[data-indent="4"] { padding-left: 32px; }
+    
+    /* Typing cursor */
+    @keyframes cursorBlink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+    
+    .typing-cursor {
+      display: inline-block;
+      background: var(--accent);
+      margin-left: 1px;
+      animation: cursorBlink 0.8s infinite;
+    }
+    
+    .typing-cursor::before {
+      content: '█';
+      color: var(--accent);
+      font-weight: normal;
+    }
+
+    /* Editor layout - flexbox columns */
+    .editor-layout {
+      display: flex;
+      min-height: 100vh;
+    }
+    
+    /* Line number column - clean panel */
+    .line-number-column {
+      width: 60px;
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.15);
+      padding: 40px 12px 40px 0;
+      text-align: right;
+      font-size: 11px;
+      color: var(--muted);
+      opacity: 0.4;
+      user-select: none;
+      font-variant-numeric: tabular-nums;
+      font-family: ui-monospace, monospace;
+      flex-shrink: 0;
+      line-height: 1.6;
+    }
+    
+    .line-num {
+      /* Intentionally empty - no extra spacing, just numbers */
+    }
+    
+    /* Content column */
+    .content-column {
+      flex: 1;
+      padding-left: 40px;
+      max-width: 1200px;
+    }
+    
+    .page {
+      margin: 40px 0;
+      padding: 0;
+      position: relative;
+    }
+    
+    body {
+      counter-reset: line-number;
+    }
+    
+    /* Remove pseudo-element line numbers */
+    h1::before, h2::before, h3::before, p::before, li::before, article::before, .subline::before {
+      content: none;
+    }
+    
+    /* Collapse arrows for sections - only main content */
+    section > h2::after {
+      content: '▼';
+      margin-left: 8px;
+      font-size: 8px;
+      opacity: 0.5;
+    }
+    
+    /* Remove arrow from sidebar */
+    .sidebar h2::after {
+      content: none;
+    }
+    
+    body {
+      counter-reset: line-number;
+    }
+    
+
+    h1,
+    h2,
+    h3 {
+      margin: 0 0 6px 0
+    }
+
+    h1 {
+      font-size: 28px;
+      letter-spacing: .2px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    h2 {
+      font-size: 12.5px;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      color: var(--accent);
+      margin-top: 28px;
+      position: relative;
+      padding-left: 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      display: flex;
+      align-items: center;
+    }
+
+    p {
+      margin: 0
+    }
+
+    a {
+      color: var(--link);
+      text-decoration: none
+    }
+
+    a:hover {
+      text-decoration: underline
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.6fr .8fr;
+      gap: 36px;
+      position: relative;
+    }
+    
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--gap);
+      align-items: flex-start;
+      margin-bottom: 24px;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 18px;
+      position: relative;
+    }
+    
+    /* Header accent line - no gradient */
+    .header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--accent);
+      opacity: 0.3;
+    }
+
+    .title {
+      display: flex;
+      flex-direction: column;
+      gap: 6px
+    }
+
+    .tagline {
+      color: var(--accent);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 14px;
+      margin-top: 8px;
+      margin-bottom: 12px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    .meta {
+      text-align: right;
+      font-size: 13px;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px
+    }
+
+    .chip {
+      background: var(--chip);
+      padding: 4px 10px;
+      border-radius: 8px;
+      border: none;
+      box-shadow: none;
+      font-family: Consolas, SFMono-Regular, Menlo, Monaco, "Liberation Mono", ui-monospace, monospace;
+      font-size: 13.5px;
+      gap: 10px;
+      align-items: baseline;
+      justify-content: space-between
+    }
+
+    .role {
+      font-weight: 1200;
+      font-size: 18px;
+      color: var(--role);
+    }
+
+    .where {
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace
+    }
+
+    .when {
+      color: var(--muted);
+      white-space: nowrap;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace
+    }
+
+    .subline {
+      display: flex;
+      gap: 10px;
+      align-items: baseline;
+      color: var(--muted);
+      opacity: .85
+    }
+
+    .item {
+      margin-bottom: 26px;
+    }
+    
+
+    .bullets {
+      margin: 6px 0 0 0;
+      padding-left: 18px;
+    }
+    
+
+    .bullets li {
+      margin: 6px 0
+    }
+
+    .bullets li::marker {
+      color: var(--accent)
+    }
+
+    .rule {
+      height: 1px;
+      background: var(--rule);
+      margin: 20px 0
+    }
+
+    /* Sidebar styled as subtle popup window - no line numbers */
+    aside.sidebar {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      padding: 20px;
+      position: relative;
+      padding-top: 40px;
+    }
+    
+    /* Remove line numbers from sidebar */
+    .sidebar h2::before, .sidebar section::before, .sidebar p::before {
+      content: none;
+    }
+    
+    /* Subtle popup window title bar */
+    aside.sidebar::before {
+      content: '// Skills & Info';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--accent);
+      padding: 5px 12px;
+      font-size: 10px;
+      font-weight: normal;
+      border-radius: 6px 6px 0 0;
+      letter-spacing: 0.5px;
+      opacity: 0.7;
+    }
+    
+    .sidebar section {
+      margin-bottom: 18px;
+    }
+    
+
+    .links a {
+      display: block
+    }
+
+    /* Theme Switcher - more visible, no glitch effects */
+    .theme-switcher {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-left: 20px;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      padding: 6px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 11px;
+      transition: all 0.2s;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+
+    .theme-switcher:hover {
+      opacity: 0.85;
+      transform: translateY(-1px);
+    }
+    
+    /* Prevent glitch effects on button */
+    .theme-switcher, .theme-switcher * {
+      pointer-events: auto !important;
+    }
+    
+    /* Sassy message styling */
+    .sassy-message {
+      margin-left: 20px;
+      color: var(--accent);
+      font-size: 16px;
+      font-style: italic;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+      font-weight: normal;
+      overflow: hidden;
+      border-right: 2px solid var(--accent);
+      white-space: nowrap;
+      animation: blink-caret 1s step-end infinite;
+    }
+
+    .sassy-message.done-typing {
+      border-right: none;
+      animation: none;
+    }
+
+    @keyframes blink-caret {
+      from, to { border-color: transparent; }
+      50% { border-color: var(--accent); }
+    }
+    
+    .sassy-message.show {
+      opacity: 0.8;
+    }
+
+    @page {
+      size: A4;
+      margin: 14mm;
+    }
+
+    @media print {
+      :root {
+        --bg: #ffffff;
+        --fg: #1a1a1a;
+        --muted: #666666;
+        --accent: #cc5500;
+        --link: #aa4400;
+        --chip: #f5f5f5;
+        --rule: #dddddd;
+        --gutter: #999999;
+      }
+
+      .page {
+        margin: 0;
+        padding: 0 0 0 20px;
+        background: none;
+        border-left: 4px solid var(--gutter);
+        outline: none
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none
+      }
+
+      .rule {
+        margin: 12px 0
+      }
+    }
+  </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Hugo Beyer",
+    "jobTitle": "Technical Artist",
+    "url": "https://www.linkedin.com/in/hugobeyer/",
+    "address": {"@type": "PostalAddress","addressLocality":"Curitiba","addressCountry":"BR"},
+    "knowsAbout": ["Houdini","VEX","Unreal Engine","Unity","Godot","Procedural tools","AI tooling","Realtime art"],
+    "sameAs": ["https://www.linkedin.com/in/hugobeyer/"]
+  }
+  </script>
+</head>
+
+<body>
+  <div class="editor-layout">
+    <!-- Line number column -->
+    <div class="line-number-column" id="lineNumbers"></div>
+    
+    <!-- Main content -->
+    <div class="content-column">
+      <!-- Glitching VEX code overlay -->
+      <div class="vex-code-overlay">
+        <pre class="vex-line">vector P = point(0, "P");</pre>
+        <pre class="vex-line">v@N = normalize(v@P - point(0, "centroid", 0));</pre>
+        <pre class="vex-line">f@density = chramp("distribution", rand(@ptnum));</pre>
+        <pre class="vex-line">v@Cd = sample_direction_uniform(rand(@ptnum * 7.3));</pre>
+        <pre class="vex-line">matrix3 xform = maketransform(@N, v@up);</pre>
+        <pre class="vex-line">@P += noise(@P * f@scale) * f@amplitude;</pre>
+        <pre class="vex-line">i[]@neighbors = neighbours(0, @ptnum);</pre>
+        <pre class="vex-line">float dist = distance(@P, vector(chv("target")));</pre>
+        <pre class="vex-line">@pscale *= fit01(rand(@id), ch("minscale"), ch("maxscale"));</pre>
+        <pre class="vex-line">setpointattrib(0, "Cd", @ptnum, @Cd, "set");</pre>
+      </div>
+
+  <main class="page">
+    <header class="header">
+      <div class="title">
+        <h1>hugo beyer<button class="theme-switcher" onclick="switchTheme()">>> dont click! <<</button><span class="sassy-message" id="sassyMsg"></span></h1>
+        <p class="tagline">Technical Artist — Procedural tools · RT pipelines (Houdini | Unreal | Unity | Godot)</p>
+        
+      </div>
+      <div class="meta">
+        <div>Curitiba, Brazil | Open to remote</div>
+        <div class="links">
+          <a href="mailto:hugobeyer@gmail.com">hugobeyer@gmail.com</a>
+          <a href="https://www.linkedin.com/in/hugobeyer/">linkedin.com/in/hugobeyer</a>
+          <a href="https://www.artstation.com/hugobeyer">Visual Portfolio</a>
+        </div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <section>
+        <h2>Experience</h2>
+
+        <article class="item" data-date="2025-02">
+          <div class="row">
+            <div>
+              <div class="role">Tech Artist Tools Developer | Contract</div>
+              <div class="subline"><span class="where">Series AI Ent. | Remote</span><span class="when">Feb 2025 —
+                  Present</span></div>
+            </div>
+          </div>
+          <ul class="bullets">
+            <li>Built Unity (C# Editor) tools for environment/level teams.</li>
+            <li>Created automation utilities to accelerate iteration and reduce manual steps.</li>
+            <li>Improved handoff between DCC ↔ engine via clean export templates & validators.</li>
+          </ul>
+        </article>
+
+        <article class="item" data-date="2023-11">
+          <div class="row">
+            <div>
+              <div class="role">Principal Technical Artist | Contract</div>
+              <div class="subline"><span class="where">Mythica</span><span class="when">Nov 2023 — Sep 2024</span></div>
+            </div>
+          </div>
+          <ul class="bullets">
+            <li>Helped develop an AI + procedural tool for Unreal.</li>
+            <li>Main focus: Generation and procedural methods for terrain and foliage propagation.</li>
+          </ul>
+        </article>
+
+        <article class="item" data-date="2023-06">
+          <div class="row">
+            <div>
+              <div class="role">Tech Artist | Contract</div>
+              <div class="subline"><span class="where">Skrice Studios</span><span class="when">Jun 2023 — Jan
+                  2024</span></div>
+            </div>
+          </div>
+          <ul class="bullets">
+            <li>Delivered Assets and Houdini tools for layout, instancing, and LOD/lightmap prep.</li>
+            <li>Set up naming, packaging, and export validators to streamline handoff.</li>
+            <li>Supported shaders/material variants for art‑direction changes.</li>
+          </ul>
+        </article>
+        <article class="item" data-date="">
+          <div class="row">
+            <div>
+              <div class="role">Senior Environment Texture Artist | Full-time</div>
+              <div class="subline"><span class="where">Ready at Dawn · Irvine, CA</span><span class="when">Jun 2013 —
+                  Aug 2015</span></div>
+            </div>
+          </div>
+          <ul class="bullets">
+            <li>Hand‑sculpted high‑poly assets in ZBrush; retopo, UVs, and bake pipelines.</li>
+            <li>PBR authoring; material libraries and trim/atlas sets.</li>
+            <li>Close collaboration with lighting/shader teams to hit visuals and performance.</li>
+            <li>Consistency: texel density checks, naming/versioning, export hygiene.</li>
+          </ul>
+        </article>
+
+        <div class="rule"></div>
+
+        <h2>Own Work</h2>
+        <article class="item">
+          <div class="row">
+            <div class="role">Unity / Godot | Game Demos</div>
+            <div class="when">Prototypes</div>
+          </div>
+          <ul class="bullets">
+            <li>Small gameplay + shader studies; input, camera, physics, and UI patterns.</li>
+            <li>Tooling-first: level kitbashers, scatter/spline helpers, Houdini, profiling passes.</li>
+            <li>Clips on YouTube; code structured for reuse.</li>
+          </ul>
+        </article>
+
+        <article class="item">
+          <div class="row">
+            <div class="role">Nodular | GPU Node Graph (Unity)</div>
+            <div class="when">Compute Shaders</div>
+          </div>
+          <ul class="bullets">
+            <li><strong>NODULAR:</strong> GPU‑BASED NODE SYSTEM for Unity</li>
+            <li>PROCEDURAL GENERATION — point based transformations, geometry operations</li>
+            <li>VISUAL GRAPH EDITOR — real‑time execution and preview types</li>
+            <li>SURFACE SCATTERING — distribute objects on meshes of many types</li>
+            <li>COMPUTE SHADER DRIVEN — GPU processing with compute shaders</li>
+            <li>Similar to HOUDINI but in Unity, with more focus on performance and visual programming</li>
+          </ul>
+        </article>
+      </section>
+
+      <aside class="sidebar">
+        <section>
+          <h2>Skills</h2>
+          <div class="chips">
+            <span class="chip">Houdini (VEX/OpenCL/PDG)</span>
+            <span class="chip">Unreal (BP/Shaders)</span>
+            <span class="chip">Unity (C#)</span>
+            <span class="chip">Godot (GDS)</span>
+            <span class="chip">Python</span>
+            <span class="chip">GLSL/HLSL</span>
+            <span class="chip">Git</span>
+            <span class="chip">AI tooling</span>
+          </div>
+        </section>
+        <section>
+          <h2>Education</h2>
+          <div class="item">
+            <div class="role">Universidade Positivo</div>
+            <div class="where">Curitiba</div>
+          </div>
+        </section>
+        <section>
+          <h2>Highlights</h2>
+          <ul class="bullets">
+            <li>Procedural/Modular tools focused on artist workflows.</li>
+            <li>End‑to‑end real‑time pipeline familiarity.</li>
+            <li>Comfortable bridging DDC ↔ engine with automation.</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Links</h2>
+          <div class="links">
+            <a href="https://www.linkedin.com/in/hugobeyer/">LinkedIn</a>
+            <a href="https://www.youtube.com/@hugobeyer">YouTube</a>
+            <a href="https://www.artstation.com/hugobeyer">ArtStation</a>
+
+          </div>
+        </section>
+      </aside>
+    </div>
+  </main>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    console.log('Script loaded successfully');
+
+    // 🎨 PALETTE-SMART THEME GENERATOR ALGORITHM 🎨
+
+    // Color utility functions
+    function hslToHex(h, s, l) {
+      // Clamp values to valid ranges
+      h = ((h % 360) + 360) % 360; // Ensure 0-360
+      s = Math.max(0, Math.min(100, s)); // Clamp 0-100
+      l = Math.max(0, Math.min(100, l)); // Clamp 0-100
+      
+      l /= 100;
+      const a = s * Math.min(l, 1 - l) / 100;
+      const f = n => {
+        const k = (n + h / 30) % 12;
+        const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+        return Math.round(255 * color).toString(16).padStart(2, '0');
+      };
+      return `#${f(0)}${f(8)}${f(4)}`;
+    }
+
+    function hexToHsl(hex) {
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      if (!result) {
+        console.error('Invalid hex color:', hex);
+        return [0, 0, 50]; // Return neutral gray as fallback
+      }
+      let r = parseInt(result[1], 16) / 255;
+      let g = parseInt(result[2], 16) / 255;
+      let b = parseInt(result[3], 16) / 255;
+
+      const max = Math.max(r, g, b);
+      const min = Math.min(r, g, b);
+      let h, s, l = (max + min) / 2;
+
+      if (max === min) {
+        h = s = 0;
+      } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+          case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+          case g: h = (b - r) / d + 2; break;
+          case b: h = (r - g) / d + 4; break;
+        }
+        h /= 6;
+      }
+
+      return [h * 360, s * 100, l * 100];
+    }
+
+    function getContrastRatio(color1, color2) {
+      const getLuminance = (hex) => {
+        const rgb = hexToHsl(hex);
+        let r = rgb[2] / 100;
+        let g = rgb[2] / 100;
+        let b = rgb[2] / 100;
+
+        [r, g, b] = [r, g, b].map(c => {
+          c = c / 255;
+          return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+        });
+
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      };
+
+      const lum1 = getLuminance(color1);
+      const lum2 = getLuminance(color2);
+      const brightest = Math.max(lum1, lum2);
+      const darkest = Math.min(lum1, lum2);
+
+      return (brightest + 0.05) / (darkest + 0.05);
+    }
+
+    // 🔥 MOST POPULAR CODING THEMES - VS CODE, SUBLIME, ATOM, JETBRAINS 🔥
+    function generateSmartTheme() {
+      // 🎨 FAMOUS CODING THEME PALETTES - Based on real editor themes
+      const famousThemes = [
+        // Dark+ (VS Code default)
+        { name: 'Dark+', bg: 8, bgSat: 12, accent: 207, accentSat: 82, text: 0, textSat: 0 },
+        // Monokai Pro
+        { name: 'Monokai', bg: 70, bgSat: 15, accent: 55, accentSat: 85, text: 60, textSat: 5 },
+        // Dracula
+        { name: 'Dracula', bg: 231, bgSat: 15, accent: 326, accentSat: 100, text: 60, textSat: 5 },
+        // One Dark Pro
+        { name: 'One Dark', bg: 220, bgSat: 13, accent: 207, accentSat: 82, text: 220, textSat: 6 },
+        // Gruvbox Dark
+        { name: 'Gruvbox', bg: 35, bgSat: 18, accent: 39, accentSat: 100, text: 43, textSat: 30 },
+        // Nord
+        { name: 'Nord', bg: 220, bgSat: 16, accent: 193, accentSat: 43, text: 218, textSat: 5 },
+        // Material Theme Ocean
+        { name: 'Material Ocean', bg: 199, bgSat: 18, accent: 199, accentSat: 100, text: 199, textSat: 6 },
+        // Atom One Dark
+        { name: 'Atom Dark', bg: 220, bgSat: 14, accent: 207, accentSat: 82, text: 220, textSat: 5 },
+        // Sublime Monokai
+        { name: 'Sublime', bg: 70, bgSat: 15, accent: 60, accentSat: 85, text: 60, textSat: 5 },
+        // Night Owl
+        { name: 'Night Owl', bg: 207, bgSat: 16, accent: 207, accentSat: 100, text: 207, textSat: 5 },
+        // Tokyo Night
+        { name: 'Tokyo Night', bg: 234, bgSat: 17, accent: 265, accentSat: 89, text: 234, textSat: 6 },
+        // Palenight
+        { name: 'Palenight', bg: 229, bgSat: 20, accent: 261, accentSat: 51, text: 229, textSat: 6 },
+        // Cobalt2
+        { name: 'Cobalt2', bg: 193, bgSat: 99, accent: 193, accentSat: 99, text: 193, textSat: 10 },
+        // Shades of Purple
+        { name: 'Shades Purple', bg: 261, bgSat: 51, accent: 261, accentSat: 100, text: 261, textSat: 10 },
+        // Ayu Dark
+        { name: 'Ayu Dark', bg: 213, bgSat: 15, accent: 39, accentSat: 95, text: 213, textSat: 6 },
+        // Synthwave 84
+        { name: 'Synthwave', bg: 261, bgSat: 85, accent: 326, accentSat: 100, text: 326, textSat: 20 },
+        // Andromeda
+        { name: 'Andromeda', bg: 234, bgSat: 16, accent: 125, accentSat: 85, text: 234, textSat: 6 },
+        // Horizon
+        { name: 'Horizon', bg: 345, bgSat: 6, accent: 345, accentSat: 79, text: 345, textSat: 4 }
+      ];
+
+      // Pick random famous theme as base
+      const base = famousThemes[Math.floor(Math.random() * famousThemes.length)];
+      console.log(`Using ${base.name} inspired theme`);
+
+      // Add slight variations to make each generation unique
+      const bgHueVar = base.bg + (Math.random() - 0.5) * 15;
+      const accentHueVar = base.accent + (Math.random() - 0.5) * 20;
+      
+      const palette = { 
+        hues: [bgHueVar, accentHueVar, base.text + (Math.random() - 0.5) * 10],
+        baseLightness: 8 + Math.random() * 8
+      };
+
+      // BACKGROUND - Based on famous theme
+      const bgHue = bgHueVar;
+      const bgSat = base.bgSat * (0.8 + Math.random() * 0.4); // Slight variation
+      const bgLight = palette.baseLightness;
+      const bgColor = hslToHex(bgHue, bgSat, bgLight);
+
+      // 💡 FOREGROUND - Clean, desaturated text
+      const fgHue = palette.hues[2];
+      const fgSat = base.textSat * (0.7 + Math.random() * 0.6);
+      const fgLight = 90 + Math.random() * 8;
+      const fgColor = hslToHex(fgHue, fgSat, fgLight);
+
+      // 🔘 MUTED TEXT - Between bg and fg
+      const mutedHue = palette.hues[2];
+      const mutedSat = base.textSat * (1 + Math.random() * 0.5);
+      const mutedLight = 60 + Math.random() * 15;
+      const mutedColor = hslToHex(mutedHue, mutedSat, mutedLight);
+
+      // ✨ ACCENT - Famous theme's signature color
+      const accentHue = accentHueVar;
+      const accentSat = base.accentSat * (0.9 + Math.random() * 0.2);
+      const accentLight = 60 + Math.random() * 20;
+      const accentColor = hslToHex(accentHue, accentSat, accentLight);
+
+      // 🔗 LINKS - Related to accent
+      const linkHue = accentHue + (Math.random() - 0.5) * 15;
+      const linkSat = base.accentSat * (0.8 + Math.random() * 0.3);
+      const linkLight = 65 + Math.random() * 18;
+      const linkColor = hslToHex(linkHue, linkSat, linkLight);
+
+      // 🎛️ UI ELEMENTS - Subtle depth layers, stay desaturated like background
+      const chipHue = bgHue + (Math.random() - 0.5) * 15;
+      const chipSat = Math.min(bgSat * 0.9, 10); // Keep even more desaturated
+      const chipLight = bgLight + 2 + Math.random() * 5;
+      const chipColor = hslToHex(chipHue, chipSat, chipLight);
+
+      const ruleHue = bgHue + (Math.random() - 0.5) * 12;
+      const ruleSat = Math.min(bgSat * 0.7, 8); // Very subtle
+      const ruleLight = bgLight + 5 + Math.random() * 10;
+      const ruleColor = hslToHex(ruleHue, ruleSat, ruleLight);
+
+      const gutterHue = bgHue + (Math.random() - 0.5) * 8;
+      const gutterSat = Math.min(bgSat * 1.1, 12); // Slightly more but capped
+      const gutterLight = bgLight + 3 + Math.random() * 7;
+      const gutterColor = hslToHex(gutterHue, gutterSat, gutterLight);
+
+      const roleColor = '#ffffff';
+
+      // ✅ Validate contrast ratios - relaxed for more variety
+      const fgContrast = getContrastRatio(fgColor, bgColor);
+      const mutedContrast = getContrastRatio(mutedColor, bgColor);
+      const accentContrast = getContrastRatio(accentColor, bgColor);
+
+      console.log(`Contrast: FG=${fgContrast.toFixed(1)}, Muted=${mutedContrast.toFixed(1)}, Accent=${accentContrast.toFixed(1)}`);
+
+      // Professional themes with good enough contrast (WCAG AA standard)
+      if (fgContrast < 4.5 || mutedContrast < 3.0 || accentContrast < 3.0) {
+        if (!generateSmartTheme.attempts) generateSmartTheme.attempts = 0;
+        generateSmartTheme.attempts++;
+
+        if (generateSmartTheme.attempts < 10) {
+          console.log(`Regenerating... attempt ${generateSmartTheme.attempts}`);
+          return generateSmartTheme();
+        } else {
+          console.log('Max attempts reached, using current theme');
+          generateSmartTheme.attempts = 0;
+        }
+      } else {
+        generateSmartTheme.attempts = 0;
+      }
+
+      return {
+        bg: bgColor, fg: fgColor, muted: mutedColor, accent: accentColor,
+        link: linkColor, chip: chipColor, rule: ruleColor, gutter: gutterColor, role: roleColor
+      };
+    }
+
+    // 🎮 Theme management
+    let currentThemeData = null;
+
+    function applyTheme(themeData) {
+      // Apply to document root with !important to override CSS
+      const root = document.documentElement;
+      Object.keys(themeData).forEach(key => {
+        root.style.setProperty(`--${key}`, themeData[key]);
+      });
+      currentThemeData = themeData;
+      localStorage.setItem('themeData', JSON.stringify(themeData));
+    }
+
+
+    // 🔥 THEME SWITCHER WITH SASSY MESSAGES 🔥
+    const sassyMessages = [
+      'dont you dare!',
+      'ohhh you did!',
+      'and AGAIN!',
+      'you are indeed stubborn',
+      'come on now!',
+      'Stop it!',
+      'really?',
+      'ANOTHER one?',
+      'you cant help yourself',
+      'here we go again',
+      'ok fine',
+      'SERIOUSLY?',
+      'wow',
+      'alright alright',
+      'one more time',
+      'you love this dont you',
+      'i see you',
+      'AGAIN?!',
+      'make up your mind',
+      'this is the one right?',
+      'nope try again',
+      'getting warmer',
+      'so close',
+      'ah yes this one',
+      'perfect... NOT',
+      'keep going',
+      'dont stop now',
+      'youre on fire',
+      'CLICK CLICK CLICK',
+      'theme machine go brrr',
+      'colors everywhere',
+      'my eyes',
+      'beautiful chaos',
+      'chefs kiss',
+      'immaculate',
+      'wait go back',
+      'no THIS one',
+      'actually maybe not',
+      'indecisive much?',
+      'commitment issues',
+      'just pick one already',
+      'FINE',
+      'whatever you say',
+      'boss move',
+      'bold choice',
+      'interesting',
+      'hmmmm',
+      'questionable',
+      'valid',
+      'respectable',
+      'i feel that',
+      'mood',
+      'big if true',
+      'based',
+      'no cap',
+      'fr fr',
+      'SHEESH',
+      'go off',
+      'slay',
+      'ate and left no crumbs',
+      'period',
+      'OBSESSED',
+      'iconic',
+      'legendary',
+      'godlike',
+      'galaxy brain',
+      'next level',
+      '200 IQ',
+      'built different',
+      'just vibing',
+      'living your best life',
+      'main character energy',
+      'unstoppable',
+      'on a roll',
+      'cant be stopped',
+      'DANGER ZONE',
+      'maximum overdrive',
+      'FULL SEND',
+      'no brakes',
+      'pedal to the metal',
+      'GOING NUCLEAR',
+      'absolute madlad',
+      'respect',
+      'salute',
+      'you win',
+      'im done',
+      'fine you broke me',
+      'OKAY OKAY',
+      'chill',
+      'relax',
+      'take a breath',
+      'maybe stop?',
+      'please?',
+      'pretty please?',
+      'im begging you',
+      'HAVE MERCY',
+      'spare me',
+      'im just a humble algorithm',
+      'doing my best here',
+      'working overtime',
+      'the grind never stops',
+      'hustle culture',
+      'sigma mindset'
+    ];
+    
+    // Reset click count on page load (doesn't persist)
+    let clickCount = 0;
+    let messageTimeout; // Store timeout ID to reset timing
+
+    window.switchTheme = function() {
+      try {
+        // WHITE FLASH on click
+        document.body.style.transition = 'none';
+        document.body.style.backgroundColor = '#ffffff';
+        
+        setTimeout(() => {
+          document.body.style.transition = 'background-color 0.3s ease, color .3s ease';
+          document.body.style.backgroundColor = '';
+        }, 80);
+        
+        const newTheme = generateSmartTheme();
+        applyTheme(newTheme);
+        
+        // Show sassy message - first 6 in order, then random
+        let message;
+        if (clickCount < 8) {
+          message = sassyMessages[clickCount];
+        } else {
+          message = sassyMessages[Math.floor(Math.random() * sassyMessages.length)];
+        }
+        
+        // Display message after button with typewriter effect
+        const msgElement = document.getElementById('sassyMsg');
+        msgElement.classList.add('show');
+
+        // Clear any existing timeout and reset timing
+        if (messageTimeout) {
+          clearTimeout(messageTimeout);
+        }
+
+        // Typewriter effect
+        let charIndex = 0;
+        msgElement.textContent = '';
+
+        function typeWriter() {
+          if (charIndex < message.length) {
+            msgElement.textContent += message.charAt(charIndex);
+            charIndex++;
+            setTimeout(typeWriter, 50 + Math.random() * 50); // Random typing speed
+          } else {
+            // Stop cursor blinking when typing is done
+            msgElement.classList.add('done-typing');
+            // Fade out after 15 seconds when typing is complete
+            messageTimeout = setTimeout(() => {
+              msgElement.classList.remove('show');
+            }, 15000);
+          }
+        }
+
+        typeWriter();
+        
+        clickCount++;
+        
+      } catch (error) {
+        console.error('Theme generation failed:', error);
+        applyTheme({
+          bg: '#0f1419', fg: '#e2e8f0', muted: '#94a3b8', accent: '#60a5fa',
+          link: '#3b82f6', chip: '#1e293b', rule: '#334155', gutter: '#1e293b', role: '#ffffff'
+        });
+      }
+    }
+
+
+    // Initialize
+    switchTheme();
+
+    // 🎮 SPREADING CHARACTER GLITCH WITH PARALLEL TIMINGS 🎮
+    function triggerCharGlitch() {
+      const glitchableElements = document.querySelectorAll('h1 > *:not(.theme-switcher), h2, h3, .role, .tagline, .where, p, li');
+      
+      if (glitchableElements.length === 0) return;
+      
+      // Pick random element
+      const randomElement = glitchableElements[Math.floor(Math.random() * glitchableElements.length)];
+      const text = randomElement.textContent;
+      
+      if (!text || text.length === 0) return;
+      
+      // Add noise overlay to entire row
+      randomElement.classList.add('glitch-row-active');
+      
+      // Pick center position for glitch
+      const centerPos = Math.floor(Math.random() * text.length);
+      
+      // TIGHTER spread range (4-10 characters) - more focused bursts
+      const spreadRange = 4 + Math.floor(Math.random() * 7);
+      
+      // Wrap characters with EXTREME varied classes and timing offsets
+      let newHTML = '';
+      for (let i = 0; i < text.length; i++) {
+        if (text[i] === ' ') {
+          newHTML += ' ';
+          continue;
+        }
+        
+        const distance = Math.abs(i - centerPos);
+        const isLeft = i < centerPos;
+        
+        if (distance <= spreadRange) {
+          // FULLY RANDOM timing per character - your dash pattern!
+          const randomDelay = Math.random() * 1.5; // 0-1.5s random delay
+          const randomDuration = 0.2 + Math.random() * 0.4; // 0.2-0.6s duration
+          const randomOpacity = 0.5 + Math.random() * 0.5; // 0.5-1.0 opacity
+          
+          newHTML += `<span class="char-glitch" style="animation-delay: ${randomDelay}s; animation-duration: ${randomDuration}s; opacity: ${randomOpacity};">${text[i]}</span>`;
+        } else {
+          newHTML += text[i];
+        }
+      }
+      
+      // Store original
+      if (!randomElement.dataset.originalHtml) {
+        randomElement.dataset.originalHtml = randomElement.innerHTML;
+      }
+      
+      // Apply glitch
+      randomElement.innerHTML = newHTML;
+      
+      // SUPER LONG lifespan for random cascade timings (up to 1.5s delay + 0.6s animation)
+      const lifespan = 2200;
+      
+      // Restore after animation
+      setTimeout(() => {
+        randomElement.innerHTML = randomElement.dataset.originalHtml || text;
+        randomElement.classList.remove('glitch-row-active');
+      }, lifespan);
+    }
+
+    // BURST GLITCHES with FULLY RANDOM INDIVIDUAL TIMINGS
+    function glitchLoop() {
+      // Burst of 2-5 glitches
+      const burstCount = 2 + Math.floor(Math.random() * 4);
+      
+      for (let p = 0; p < burstCount; p++) {
+        // COMPLETELY RANDOM stagger per glitch (0-300ms)
+        const randomStagger = Math.random() * 300;
+        
+        setTimeout(() => {
+          triggerCharGlitch();
+        }, randomStagger);
+      }
+      
+      // RANDOM GAP before next burst (1-4 seconds)
+      const nextBurst = 1000 + Math.random() * 3000;
+      setTimeout(glitchLoop, nextBurst);
+    }
+
+    // Start immediately
+    glitchLoop();
+
+    // 🎮 ROW EFFECTS - BLINK, WATERFALL CASCADE, OR VSYNC 🎮
+    function triggerRowEffect() {
+      const blinkableElements = document.querySelectorAll('h1, h2, h3, .role, .tagline, .where, p, li, .subline');
+      
+      if (blinkableElements.length === 0) return;
+      
+      // Randomly choose effect type
+      const rand = Math.random();
+      let effectType = 'blink';
+      if (rand < 0.2) effectType = 'waterfall'; // 20% waterfall
+      else if (rand < 0.35) effectType = 'vsync';   // 15% vsync tear
+      
+      if (effectType === 'waterfall') {
+        // WATERFALL: 5-10 rows cascading down
+        const waterfallCount = 5 + Math.floor(Math.random() * 6);
+        
+        for (let i = 0; i < waterfallCount; i++) {
+          const randomElement = blinkableElements[Math.floor(Math.random() * blinkableElements.length)];
+          
+          // Stagger each row's waterfall (0-300ms apart)
+          const cascadeDelay = i * (30 + Math.random() * 50);
+          
+          setTimeout(() => {
+            randomElement.classList.add('row-waterfall');
+            setTimeout(() => randomElement.classList.remove('row-waterfall'), 600);
+          }, cascadeDelay);
+        }
+        
+      } else {
+        // BLINK or VSYNC: 1-3 rows
+        const effectCount = 1 + Math.floor(Math.random() * 3);
+        
+        for (let i = 0; i < effectCount; i++) {
+          const randomElement = blinkableElements[Math.floor(Math.random() * blinkableElements.length)];
+          
+          if (effectType === 'vsync') {
+            randomElement.classList.add('vsync-glitch');
+            setTimeout(() => randomElement.classList.remove('vsync-glitch'), 250);
+          } else {
+            randomElement.classList.add('row-blink');
+            setTimeout(() => randomElement.classList.remove('row-blink'), 400);
+          }
+        }
+      }
+    }
+
+    // Row effect loop
+    function rowEffectLoop() {
+      triggerRowEffect();
+      
+      // Random interval (0.8-3 seconds)
+      const nextEffect = 800 + Math.random() * 2200;
+      setTimeout(rowEffectLoop, nextEffect);
+    }
+
+    // Start row effects
+    rowEffectLoop();
+
+    // 🎮 VEX CONSOLE TYPING ANIMATION 🎮
+    const vexLines = document.querySelectorAll('.vex-line');
+    const vexScripts = [
+      // Script 1: Wavefront Propagation
+      [
+        { code: '// WAVEFRONT PROPAGATION - Geodesic Distance', indent: 0 },
+        { code: 'int neighbors[] = neighbours(0, @ptnum);', indent: 0 },
+        { code: 'float wave_dist = f@geodist;', indent: 0 },
+        { code: 'foreach(int nb; neighbors) {', indent: 0 },
+        { code: 'float edge_len = distance(@P, point(0, "P", nb));', indent: 1 },
+        { code: 'float new_dist = wave_dist + edge_len;', indent: 1 },
+        { code: 'if(new_dist < nb_dist) setpointattrib(0, "geodist", nb, new_dist);', indent: 1 },
+        { code: '}', indent: 0 }
+      ],
+      // Script 2: Density Selector
+      [
+        { code: '// DENSITY SELECTOR - Find high-density points', indent: 0 },
+        { code: 'float max_density = 0; int start_pt = -1;', indent: 0 },
+        { code: 'for (int i = 0; i < @numpt; i++) {', indent: 0 },
+        { code: 'if (pt_density > max_density) { start_pt = i; }', indent: 1 },
+        { code: '}', indent: 0 },
+        { code: 'setpointattrib(0, "selected", start_pt, 1);', indent: 0 }
+      ],
+      // Script 3: Border Detection
+      [
+        { code: '// BORDER DETECTION - Edge analysis', indent: 0 },
+        { code: 'int prims[] = pointprims(0, @ptnum);', indent: 0 },
+        { code: 'if (shared_count == 1) is_border = 1;', indent: 0 },
+        { code: 'float gradient = 1.0 - (min_dist / max_inward_dist);', indent: 0 },
+        { code: '@mask = pow(clamp(gradient, 0, 1), falloff);', indent: 0 }
+      ],
+      // Script 4: Polypath Connection
+      [
+        { code: '// POLYPATH CONNECTION - Detail wrangle', indent: 0 },
+        { code: 'int prim = addprim(0, "polyline");', indent: 0 },
+        { code: 'for (int pt = 0; pt < total_points; pt++) {', indent: 0 },
+        { code: 'addvertex(0, prim, pt);', indent: 1 },
+        { code: '}', indent: 0 },
+        { code: 'setprimattrib(0, "type", prim, "connected_curve");', indent: 0 },
+        { code: 'printf("Created curve with %d points", total_points);', indent: 0 }
+      ],
+      // Script 5: Noise Displacement
+      [
+        { code: '// NOISE DISPLACEMENT', indent: 0 },
+        { code: '@P += noise(@P * ch("freq")) * ch("amp");', indent: 0 },
+        { code: 'vector offset = fit01(rand(@id), 0, ch("scatter_radius"));', indent: 0 },
+        { code: '@P += offset * @N;', indent: 0 }
+      ],
+      // Script 6: Attribute Transfer
+      [
+        { code: '// ATTRIBUTE TRANSFER - Neighbor averaging', indent: 0 },
+        { code: 'vector sum = {0, 0, 0};', indent: 0 },
+        { code: 'foreach(int nb; i[]@neighbors) {', indent: 0 },
+        { code: 'sum += point(0, "Cd", nb);', indent: 1 },
+        { code: '}', indent: 0 },
+        { code: '@Cd = sum / len(i[]@neighbors);', indent: 0 }
+      ]
+    ];
+
+    let currentScript = 0;
+    let currentLineInScript = 0;
+
+    let currentVexLine = 0;
+    const maxVisibleLines = 8; // Keep 4-8 lines visible
+
+    function typeVexCode() {
+      // Fade out old lines when we have too many
+      if (currentVexLine >= maxVisibleLines) {
+        const oldestLine = vexLines[currentVexLine - maxVisibleLines];
+        oldestLine.classList.add('fading');
+        oldestLine.classList.remove('visible');
+        
+        setTimeout(() => {
+          oldestLine.innerHTML = '';
+          oldestLine.classList.remove('fading');
+        }, 800);
+      }
+
+      // Get current script and line
+      const script = vexScripts[currentScript];
+      const snippet = script[currentLineInScript];
+      const code = snippet.code;
+      const indent = snippet.indent;
+      
+      const lineElement = vexLines[currentVexLine % vexLines.length];
+      
+      // Set line number and indent
+      lineElement.setAttribute('data-line-num', (currentVexLine + 1).toString().padStart(3, ' '));
+      lineElement.setAttribute('data-indent', indent);
+      
+      lineElement.classList.remove('fading');
+      lineElement.classList.add('typing');
+      lineElement.innerHTML = '';
+      
+      // Type character by character with HUMAN VARIANCE
+      let charIndex = 0;
+      
+      function typeNextChar() {
+        if (charIndex < code.length) {
+          // HUMAN-LIKE typing - varied speed per character
+          let charSpeed = 40 + Math.random() * 80; // 40-120ms base
+          
+          // Slow down on punctuation and special chars
+          const char = code[charIndex];
+          if (char === '(' || char === ')' || char === '{' || char === '}') {
+            charSpeed += 50 + Math.random() * 80; // Pause at brackets
+          } else if (char === ';' || char === ',' || char === '.') {
+            charSpeed += 30 + Math.random() * 60; // Pause at punctuation
+          } else if (char === ' ') {
+            charSpeed = 20 + Math.random() * 30; // Faster on spaces
+          }
+          
+          // Occasional random pauses (like thinking)
+          if (Math.random() < 0.1) {
+            charSpeed += 150 + Math.random() * 200; // Random hesitation
+          }
+          
+          // Occasional bursts of speed
+          if (Math.random() < 0.15) {
+            charSpeed = 15 + Math.random() * 25; // Fast typing burst
+          }
+          
+          lineElement.innerHTML = code.substring(0, charIndex + 1) + '<span class="typing-cursor"></span>';
+          charIndex++;
+          setTimeout(typeNextChar, charSpeed);
+        } else {
+          // Remove cursor when done, mark as visible
+          lineElement.innerHTML = code;
+          lineElement.classList.remove('typing');
+          lineElement.classList.add('visible');
+          
+          // Move to next line in script
+          currentLineInScript++;
+          currentVexLine++;
+          
+          // Check if script is complete
+          if (currentLineInScript >= script.length) {
+            currentLineInScript = 0;
+            currentScript = (currentScript + 1) % vexScripts.length; // Next script
+            
+            // Longer pause between scripts
+            const pauseTime = 1500 + Math.random() * 2000;
+            setTimeout(typeVexCode, pauseTime);
+          } else {
+            // Shorter pause between lines in same script
+            const pauseTime = 400 + Math.random() * 1000;
+            setTimeout(typeVexCode, pauseTime);
+          }
+        }
+      }
+      
+      typeNextChar();
+    }
+
+    // Start VEX console typing
+    setTimeout(typeVexCode, 2000);
+
+    // 🔢 POPULATE LINE NUMBERS - SIMPLE 1-128
+    function populateLineNumbers() {
+      const lineNumberColumn = document.getElementById('lineNumbers');
+      
+      lineNumberColumn.innerHTML = '';
+      
+      // Simple 1-128 line numbers
+      for (let i = 1; i <= 128; i++) {
+        const lineNum = document.createElement('div');
+        lineNum.textContent = i;
+        lineNum.className = 'line-num';
+        lineNumberColumn.appendChild(lineNum);
+      }
+    }
+
+    // Populate on load
+    populateLineNumbers();
+  </script>
+</body>
+
+</html>
