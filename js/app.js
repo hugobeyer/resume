@@ -22,7 +22,18 @@ if (document.readyState === 'loading') {
 }
 
 // Initialize theme
-switchTheme();
+if (typeof switchTheme === 'function') {
+  // Delay theme initialization to ensure DOM is ready
+  setTimeout(() => {
+    try {
+      switchTheme();
+    } catch (error) {
+      console.warn('Theme switching failed (elements may not be loaded yet):', error);
+    }
+  }, 100);
+} else {
+  console.warn('switchTheme function not found');
+}
 
 // Start glitch effects
 setTimeout(() => {
@@ -31,13 +42,25 @@ setTimeout(() => {
 }, 1000);
 
 // Start VEX console typing
-setTimeout(typeVexCode, 2000);
+if (typeof typeVexCode === 'function') {
+  setTimeout(() => {
+    try {
+      typeVexCode();
+    } catch (error) {
+      console.warn('VEX console typing failed:', error);
+    }
+  }, 2000);
+}
 
 // Populate line numbers
-populateLineNumbers();
+if (typeof populateLineNumbers === 'function') {
+  populateLineNumbers();
+}
 
 // Start button effects
-buttonEffectLoop();
+if (typeof buttonEffectLoop === 'function') {
+  buttonEffectLoop();
+}
 
 // Hidden hotkey to access admin page: Ctrl+Shift+Alt+H
 function setupAdminHotkey() {

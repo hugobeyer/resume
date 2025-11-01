@@ -47,17 +47,21 @@ function hexToHsl(hex) {
 
 function getContrastRatio(color1, color2) {
   const getLuminance = (hex) => {
-    const rgb = hexToHsl(hex);
-    let r = rgb[2] / 100;
-    let g = rgb[2] / 100;
-    let b = rgb[2] / 100;
+    // Convert hex to RGB first
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    if (!result) return 0.5; // Fallback
+    
+    const r = parseInt(result[1], 16) / 255;
+    const g = parseInt(result[2], 16) / 255;
+    const b = parseInt(result[3], 16) / 255;
 
-    [r, g, b] = [r, g, b].map(c => {
-      c = c / 255;
+    // Convert to linear RGB
+    const [rLinear, gLinear, bLinear] = [r, g, b].map(c => {
       return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
     });
 
-    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    // Calculate relative luminance
+    return 0.2126 * rLinear + 0.7152 * gLinear + 0.0722 * bLinear;
   };
 
   const lum1 = getLuminance(color1);

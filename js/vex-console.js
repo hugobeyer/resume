@@ -64,25 +64,45 @@ let currentVexLine = 0;
 const maxVisibleLines = 8; // Keep 4-8 lines visible
 
 function typeVexCode() {
+  // Check if vexLines exists and has elements
+  if (!vexLines || vexLines.length === 0) {
+    const overlay = document.querySelector('.vex-code-overlay');
+    if (!overlay) return;
+    vexLines = Array.from(overlay.querySelectorAll('.vex-line'));
+    if (vexLines.length === 0) return;
+  }
+  
   // Fade out old lines when we have too many
-  if (currentVexLine >= maxVisibleLines) {
+  if (currentVexLine >= maxVisibleLines && currentVexLine - maxVisibleLines < vexLines.length) {
     const oldestLine = vexLines[currentVexLine - maxVisibleLines];
-    oldestLine.classList.add('fading');
-    oldestLine.classList.remove('visible');
+    if (oldestLine) {
+      oldestLine.classList.add('fading');
+      oldestLine.classList.remove('visible');
 
-    setTimeout(() => {
-      oldestLine.innerHTML = '';
-      oldestLine.classList.remove('fading');
-    }, 800);
+      setTimeout(() => {
+        if (oldestLine) {
+          oldestLine.innerHTML = '';
+          oldestLine.classList.remove('fading');
+        }
+      }, 800);
+    }
   }
 
   // Get current script and line
   const script = vexScripts[currentScript];
+  if (!script || !script[currentLineInScript]) {
+    // Reset if script is invalid
+    currentScript = 0;
+    currentLineInScript = 0;
+    return;
+  }
+  
   const snippet = script[currentLineInScript];
   const code = snippet.code;
   const indent = snippet.indent;
 
   const lineElement = vexLines[currentVexLine % vexLines.length];
+  if (!lineElement) return;
 
   // Set line number and indent
   lineElement.setAttribute('data-line-num', (currentVexLine + 1).toString().padStart(3, ' '));
@@ -168,9 +188,10 @@ function populateLineNumbers() {
 }
 
 // 🎮 BUTTON ANIMATION EFFECTS 🎮
-const themeButton = document.querySelector('.theme-switcher');
-
 function triggerButtonEffect() {
+  const themeButton = document.querySelector('.theme-switcher');
+  if (!themeButton) return;
+  
   // Remove any existing animation classes
   themeButton.classList.remove('blink', 'jitter');
 

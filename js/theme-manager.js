@@ -277,6 +277,11 @@ window.switchTheme = function() {
 
     // Display message after button with typewriter effect
     const msgElement = document.getElementById('sassyMsg');
+    if (!msgElement) {
+      console.warn('Sassy message element not found');
+      return;
+    }
+    
     msgElement.classList.add('show');
 
     // Clear any existing timeout and reset timing

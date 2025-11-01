@@ -15,17 +15,48 @@ function getBlogPosts() {
 
 // Save blog posts to localStorage
 function saveBlogPosts(posts) {
-  localStorage.setItem(BLOG_STORAGE_KEY, JSON.stringify(posts));
+  try {
+    // Check size before saving
+    const dataString = JSON.stringify(posts);
+    const sizeInMB = new Blob([dataString]).size / (1024 * 1024);
+    
+    if (sizeInMB > 4) {
+      console.warn('Blog posts data is large:', sizeInMB.toFixed(2), 'MB');
+      // Try to compress by removing old images or compressing them
+      const compressedPosts = posts.map(post => {
+        if (post.image && post.image.length > 100000) {
+          // Compress large images - remove if too large
+          console.warn('Removing large image from post:', post.id);
+          return { ...post, image: null };
+        }
+        return post;
+      });
+      
+      const compressedString = JSON.stringify(compressedPosts);
+      localStorage.setItem(BLOG_STORAGE_KEY, compressedString);
+    } else {
+      localStorage.setItem(BLOG_STORAGE_KEY, dataString);
+    }
+  } catch (error) {
+    if (error.name === 'QuotaExceededError') {
+      alert('Storage quota exceeded. Please remove some old posts or images to free up space.');
+      console.error('localStorage quota exceeded. Consider removing old posts or compressing images.');
+    } else {
+      console.error('Error saving blog posts:', error);
+      throw error;
+    }
+  }
 }
 
 // Add a new blog post
-function addBlogPost(title, content, image, tags, youtubeUrl, vimeoUrl, links, category, published = true) {
+function addBlogPost(title, content, image, tags, youtubeUrl, vimeoUrl, links, category, imagePosition = 'banner', published = true) {
   const posts = getBlogPosts();
   const newPost = {
     id: Date.now().toString(),
     title: title,
     content: content,
     image: image, // base64 encoded image
+    imagePosition: imagePosition || 'banner',
     tags: tags ? tags.split(',').map(t => t.trim()) : [],
     youtubeUrl: youtubeUrl || null,
     vimeoUrl: vimeoUrl || null,
@@ -164,6 +195,16 @@ function generateLinkPreview(url) {
   }
 }
 
+// Generate image HTML based on position
+function generateBlogImage(image, title, position = 'banner') {
+  if (!image) return '';
+  
+  const imageHtml = `<img src="${image}" alt="${escapeHtml(title)}">`;
+  const positionClass = `blog-image-${position}`;
+  
+  return `<div class="blog-image ${positionClass}">${imageHtml}</div>`;
+}
+
 // Display blog posts on blog.html
 function displayBlogPosts(filter = '', category = '') {
   const container = document.getElementById('blog-posts-container');
@@ -192,23 +233,72 @@ function displayBlogPosts(filter = '', category = '') {
     return;
   }
 
-  container.innerHTML = posts.map(post => `
-    <article class="blog-post">
-      <div class="blog-post-header">
-        <h3>${escapeHtml(post.title)}</h3>
-        <div class="blog-post-meta">
-          <span class="blog-date">${formatDate(post.date)}</span>
-          ${post.category ? `<span class="blog-category">${escapeHtml(post.category)}</span>` : ''}
-          ${post.tags.length > 0 ? `<div class="blog-tags">${post.tags.map(t => `<span class="blog-tag">${escapeHtml(t)}</span>`).join('')}</div>` : ''}
+  container.innerHTML = posts.map(post => {
+    const imagePosition = post.imagePosition || 'banner';
+    const imageHtml = generateBlogImage(post.image, post.title, imagePosition);
+    
+    // Structure based on image position
+    let contentStructure = '';
+    
+    if (imagePosition === 'banner') {
+      // Banner: image on top
+      contentStructure = `
+        ${imageHtml}
+        ${post.youtubeUrl ? generateYouTubeEmbed(post.youtubeUrl) : ''}
+        ${post.vimeoUrl ? generateVimeoEmbed(post.vimeoUrl) : ''}
+        <div class="blog-content">${formatBlogContent(post.content)}</div>
+        ${post.links && post.links.length > 0 ? post.links.map(link => generateLinkPreview(link)).join('') : ''}
+      `;
+    } else if (imagePosition === 'side') {
+      // Side: image beside content
+      contentStructure = `
+        <div class="blog-content-with-side-image">
+          ${imageHtml}
+          <div class="blog-content-wrapper">
+            ${post.youtubeUrl ? generateYouTubeEmbed(post.youtubeUrl) : ''}
+            ${post.vimeoUrl ? generateVimeoEmbed(post.vimeoUrl) : ''}
+            <div class="blog-content">${formatBlogContent(post.content)}</div>
+            ${post.links && post.links.length > 0 ? post.links.map(link => generateLinkPreview(link)).join('') : ''}
+          </div>
         </div>
-      </div>
-      ${post.image ? `<div class="blog-image"><img src="${post.image}" alt="${escapeHtml(post.title)}"></div>` : ''}
-      ${post.youtubeUrl ? generateYouTubeEmbed(post.youtubeUrl) : ''}
-      ${post.vimeoUrl ? generateVimeoEmbed(post.vimeoUrl) : ''}
-      <div class="blog-content">${formatBlogContent(post.content)}</div>
-      ${post.links && post.links.length > 0 ? post.links.map(link => generateLinkPreview(link)).join('') : ''}
-    </article>
-  `).join('');
+      `;
+    } else {
+      // Inline: image within content (inserted after first paragraph)
+      const content = formatBlogContent(post.content);
+      const contentWithImage = insertImageInContent(content, imageHtml);
+      contentStructure = `
+        ${post.youtubeUrl ? generateYouTubeEmbed(post.youtubeUrl) : ''}
+        ${post.vimeoUrl ? generateVimeoEmbed(post.vimeoUrl) : ''}
+        <div class="blog-content">${contentWithImage}</div>
+        ${post.links && post.links.length > 0 ? post.links.map(link => generateLinkPreview(link)).join('') : ''}
+      `;
+    }
+    
+    return `
+      <article class="blog-post">
+        <div class="blog-post-header">
+          <h3>${escapeHtml(post.title)}</h3>
+          <div class="blog-post-meta">
+            <span class="blog-date">${formatDate(post.date)}</span>
+            ${post.category ? `<span class="blog-category">${escapeHtml(post.category)}</span>` : ''}
+            ${post.tags.length > 0 ? `<div class="blog-tags">${post.tags.map(t => `<span class="blog-tag">${escapeHtml(t)}</span>`).join('')}</div>` : ''}
+          </div>
+        </div>
+        ${contentStructure}
+      </article>
+    `;
+  }).join('');
+}
+
+// Insert image inline in content (after first paragraph)
+function insertImageInContent(content, imageHtml) {
+  // Find first </p> tag and insert image after it
+  const firstPClose = content.indexOf('</p>');
+  if (firstPClose !== -1) {
+    return content.slice(0, firstPClose + 4) + imageHtml + content.slice(firstPClose + 4);
+  }
+  // If no paragraphs, insert at beginning
+  return imageHtml + content;
 }
 
 // Initialize blog filters

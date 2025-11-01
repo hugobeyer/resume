@@ -163,10 +163,12 @@ function showPostPreview() {
   }
 
   // Create temporary post object for preview
+  const imagePosition = document.getElementById('post-image-position').value || 'banner';
   const previewPost = {
     title: title,
     content: content,
     image: image,
+    imagePosition: imagePosition,
     tags: tags ? tags.split(',').map(t => t.trim()).filter(t => t) : [],
     youtubeUrl: youtubeUrl || null,
     vimeoUrl: vimeoUrl || null,
@@ -302,6 +304,59 @@ function renderPostPreview(post) {
     }
   };
 
+  // Helper function to generate image HTML
+  const generateBlogImage = function(image, title, position = 'banner') {
+    if (!image) return '';
+    const positionClass = `blog-image-${position}`;
+    return `<div class="blog-image ${positionClass}"><img src="${image}" alt="${escapeHtml(title)}"></div>`;
+  };
+  
+  // Helper function to insert image inline
+  const insertImageInContent = function(content, imageHtml) {
+    const firstPClose = content.indexOf('</p>');
+    if (firstPClose !== -1) {
+      return content.slice(0, firstPClose + 4) + imageHtml + content.slice(firstPClose + 4);
+    }
+    return imageHtml + content;
+  };
+  
+  const imagePosition = post.imagePosition || 'banner';
+  const imageHtml = generateBlogImage(post.image, post.title, imagePosition);
+  
+  // Structure based on image position
+  let contentStructure = '';
+  
+  if (imagePosition === 'banner') {
+    contentStructure = `
+      ${imageHtml}
+      ${post.youtubeUrl ? generateYouTubeEmbed(post.youtubeUrl) : ''}
+      ${post.vimeoUrl ? generateVimeoEmbed(post.vimeoUrl) : ''}
+      <div class="blog-content">${formatBlogContent(post.content)}</div>
+      ${post.links && post.links.length > 0 ? post.links.map(link => generateLinkPreview(link)).join('') : ''}
+    `;
+  } else if (imagePosition === 'side') {
+    contentStructure = `
+      <div class="blog-content-with-side-image">
+        ${imageHtml}
+        <div class="blog-content-wrapper">
+          ${post.youtubeUrl ? generateYouTubeEmbed(post.youtubeUrl) : ''}
+          ${post.vimeoUrl ? generateVimeoEmbed(post.vimeoUrl) : ''}
+          <div class="blog-content">${formatBlogContent(post.content)}</div>
+          ${post.links && post.links.length > 0 ? post.links.map(link => generateLinkPreview(link)).join('') : ''}
+        </div>
+      </div>
+    `;
+  } else {
+    const content = formatBlogContent(post.content);
+    const contentWithImage = insertImageInContent(content, imageHtml);
+    contentStructure = `
+      ${post.youtubeUrl ? generateYouTubeEmbed(post.youtubeUrl) : ''}
+      ${post.vimeoUrl ? generateVimeoEmbed(post.vimeoUrl) : ''}
+      <div class="blog-content">${contentWithImage}</div>
+      ${post.links && post.links.length > 0 ? post.links.map(link => generateLinkPreview(link)).join('') : ''}
+    `;
+  }
+
   return `
     <article class="blog-post">
       <div class="blog-post-header">
@@ -312,11 +367,7 @@ function renderPostPreview(post) {
           ${post.tags.length > 0 ? `<div class="blog-tags">${post.tags.map(t => `<span class="blog-tag">${escapeHtml(t)}</span>`).join('')}</div>` : ''}
         </div>
       </div>
-      ${post.image ? `<div class="blog-image"><img src="${post.image}" alt="${escapeHtml(post.title)}"></div>` : ''}
-      ${post.youtubeUrl ? generateYouTubeEmbed(post.youtubeUrl) : ''}
-      ${post.vimeoUrl ? generateVimeoEmbed(post.vimeoUrl) : ''}
-      <div class="blog-content">${formatBlogContent(post.content)}</div>
-      ${post.links && post.links.length > 0 ? post.links.map(link => generateLinkPreview(link)).join('') : ''}
+      ${contentStructure}
     </article>
   `;
 }
@@ -397,6 +448,7 @@ async function handlePostSubmit(event) {
   const vimeoUrl = document.getElementById('post-vimeo').value.trim();
   const links = document.getElementById('post-links').value.trim();
   const category = document.getElementById('post-category').value.trim();
+  const imagePosition = document.getElementById('post-image-position').value || 'banner';
   const published = document.getElementById('post-published').checked;
 
   if (!title || !content) {
@@ -405,7 +457,7 @@ async function handlePostSubmit(event) {
   }
 
   try {
-    addBlogPost(title, content, currentImageBase64, tags, youtubeUrl, vimeoUrl, links, category, published);
+    addBlogPost(title, content, currentImageBase64, tags, youtubeUrl, vimeoUrl, links, category, imagePosition, published);
     
     // Reset form
     document.getElementById('post-form').reset();
