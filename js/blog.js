@@ -353,27 +353,101 @@ function initBlogFilters() {
   }
 }
 
-// Format blog content (preserve line breaks, detect URLs, and basic formatting)
+// Format blog content (preserve line breaks, detect URLs, and support Markdown)
 function formatBlogContent(content) {
   if (!content) return '';
   
   let formatted = escapeHtml(content);
   
-  // Detect URLs in content and convert to links
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  // Markdown formatting (apply before URL detection)
+  // Headings
+  formatted = formatted.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  formatted = formatted.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+  formatted = formatted.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+  
+  // Bold **text**
+  formatted = formatted.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  
+  // Italic *text*
+  formatted = formatted.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  
+  // Underline <u>text</u> (already HTML, just unescape)
+  formatted = formatted.replace(/&lt;u&gt;(.+?)&lt;\/u&gt;/g, '<u>$1</u>');
+  
+  // Code blocks ```code```
+  formatted = formatted.replace(/```([^`]+)```/g, '<pre class="code-block"><code>$1</code></pre>');
+  
+  // Inline code `code`
+  formatted = formatted.replace(/`([^`]+)`/g, '<code class="inline-code">$1</code>');
+  
+  // Links [text](url)
+  formatted = formatted.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="external-link">$1</a>');
+  
+  // Horizontal rule ---
+  formatted = formatted.replace(/^---$/gm, '<hr class="content-divider">');
+  
+  // Blockquotes > text
+  formatted = formatted.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
+  
+  // Unordered lists - item
+  formatted = formatted.replace(/^- (.+)$/gm, '<li>$1</li>');
+  formatted = formatted.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
+  
+  // Ordered lists 1. item
+  formatted = formatted.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+  
+  // Detect URLs in content and convert to links (skip already formatted links)
+  const urlRegex = /(https?:\/\/[^\s<]+)/g;
   formatted = formatted.replace(urlRegex, (url) => {
     if (isVideoUrl(url)) {
       return url; // Keep video URLs as-is, they're handled separately
     }
+    // Check if URL is already in a link
+    if (formatted.includes(`href="${url}"`)) {
+      return url;
+    }
     return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="external-link">${url}</a>`;
   });
   
-  // Format paragraphs
+  // Format paragraphs (avoid wrapping headings, lists, blockquotes, code blocks)
+  const lines = formatted.split('\n');
+  let inList = false;
+  let inBlockquote = false;
+  let result = [];
+  
+  lines.forEach(line => {
+    const trimmed = line.trim();
+    
+    if (trimmed.startsWith('<h') || trimmed.startsWith('<pre') || trimmed.startsWith('<hr') || trimmed.startsWith('<ul') || trimmed.startsWith('</ul') || trimmed.startsWith('<blockquote') || trimmed.startsWith('</blockquote')) {
+      result.push(line);
+    } else if (trimmed.startsWith('<li>')) {
+      result.push(line);
+      inList = true;
+    } else if (trimmed === '') {
+      if (!inList && !inBlockquote) {
+        result.push('</p><p>');
+      }
+    } else {
+      result.push(line + '<br>');
+    }
+  });
+  
+  formatted = '<p>' + result.join('\n') + '</p>';
+  
+  // Clean up empty paragraphs and extra breaks
   formatted = formatted
-    .replace(/\n\n+/g, '</p><p>')
-    .replace(/\n/g, '<br>')
-    .replace(/^/, '<p>')
-    .replace(/$/, '</p>');
+    .replace(/<p>\s*<\/p>/g, '')
+    .replace(/<p>(<h\d>)/g, '$1')
+    .replace(/(<\/h\d>)<\/p>/g, '$1')
+    .replace(/<p>(<ul>)/g, '$1')
+    .replace(/(<\/ul>)<\/p>/g, '$1')
+    .replace(/<p>(<blockquote>)/g, '$1')
+    .replace(/(<\/blockquote>)<\/p>/g, '$1')
+    .replace(/<p>(<pre)/g, '$1')
+    .replace(/(<\/pre>)<\/p>/g, '$1')
+    .replace(/<p>(<hr)/g, '$1')
+    .replace(/(<hr[^>]*>)<\/p>/g, '$1')
+    .replace(/<br>\s*<\/p>/g, '</p>');
   
   return formatted;
 }

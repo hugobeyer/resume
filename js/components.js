@@ -7,6 +7,7 @@
     'index.html': {
       headerLinks: [
         { href: 'blog.html', text: 'Blog' },
+        { href: 'https://hugobeyer.gumroad.com/', text: 'hugobeyer.gumroad.com', class: 'social-link' },
         { href: 'https://www.linkedin.com/in/hugobeyer/', text: 'www.linkedin.com/in/hugobeyer', class: 'social-link' },
         { href: 'https://www.artstation.com/hugobeyer', text: 'www.artstation.com/hugobeyer', class: 'social-link' },
         { href: 'https://youtube.com/@hugobeyer', text: 'youtube.com/@hugobeyer', class: 'social-link' }
@@ -46,6 +47,7 @@
           title: 'Links',
           type: 'links',
           content: [
+            { href: 'https://hugobeyer.gumroad.com/', text: 'Gumroad' },
             { href: 'https://www.linkedin.com/in/hugobeyer/', text: 'LinkedIn' },
             { href: 'https://www.youtube.com/@hugobeyer', text: 'YouTube' },
             { href: 'https://www.artstation.com/hugobeyer', text: 'ArtStation' }
@@ -62,6 +64,7 @@
       headerLinks: [
         { href: 'index.html', text: 'Resume' },
         { href: 'blog.html', text: 'Blog' },
+        { href: 'https://hugobeyer.gumroad.com/', text: 'hugobeyer.gumroad.com', class: 'social-link' },
         { href: 'https://www.linkedin.com/in/hugobeyer/', text: 'www.linkedin.com/in/hugobeyer', class: 'social-link' },
         { href: 'https://www.artstation.com/hugobeyer', text: 'www.artstation.com/hugobeyer', class: 'social-link' },
         { href: 'https://youtube.com/@hugobeyer', text: 'youtube.com/@hugobeyer', class: 'social-link' }
@@ -111,6 +114,7 @@
           title: 'Links',
           type: 'links',
           content: [
+            { href: 'https://hugobeyer.gumroad.com/', text: 'Gumroad' },
             { href: 'https://www.linkedin.com/in/hugobeyer/', text: 'LinkedIn' },
             { href: 'https://www.youtube.com/@hugobeyer', text: 'YouTube' },
             { href: 'https://www.artstation.com/hugobeyer', text: 'ArtStation' }
@@ -123,6 +127,7 @@
         { href: 'index.html', text: 'Resume' },
         { href: 'blog.html', text: 'Blog' },
         { href: 'admin.html', text: 'Admin' },
+        { href: 'https://hugobeyer.gumroad.com/', text: 'hugobeyer.gumroad.com', class: 'social-link' },
         { href: 'https://www.linkedin.com/in/hugobeyer/', text: 'www.linkedin.com/in/hugobeyer', class: 'social-link' },
         { href: 'https://www.artstation.com/hugobeyer', text: 'www.artstation.com/hugobeyer', class: 'social-link' },
         { href: 'https://youtube.com/@hugobeyer', text: 'youtube.com/@hugobeyer', class: 'social-link' }
@@ -162,6 +167,7 @@
           title: 'Links',
           type: 'links',
           content: [
+            { href: 'https://hugobeyer.gumroad.com/', text: 'Gumroad' },
             { href: 'https://www.linkedin.com/in/hugobeyer/', text: 'LinkedIn' },
             { href: 'https://www.youtube.com/@hugobeyer', text: 'YouTube' },
             { href: 'https://www.artstation.com/hugobeyer', text: 'ArtStation' }
