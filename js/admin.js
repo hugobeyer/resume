@@ -456,15 +456,37 @@ async function handlePostSubmit(event) {
     return;
   }
 
+  const form = document.getElementById('post-form');
+  const editingPostId = form.getAttribute('data-editing-post-id');
+
   try {
-    addBlogPost(title, content, currentImageBase64, tags, youtubeUrl, vimeoUrl, links, category, imagePosition, published);
+    if (editingPostId) {
+      // Update existing post
+      const updatedPost = {
+        title: title,
+        content: content,
+        image: currentImageBase64,
+        tags: tags ? tags.split(',').map(t => t.trim()) : [],
+        youtubeUrl: youtubeUrl || null,
+        vimeoUrl: vimeoUrl || null,
+        links: links ? links.split('\n').map(l => l.trim()).filter(l => l) : [],
+        category: category || '',
+        imagePosition: imagePosition || 'banner',
+        published: published
+      };
+      
+      updateBlogPost(editingPostId, updatedPost);
+      form.removeAttribute('data-editing-post-id');
+      showMessage('Post updated successfully!', 'success');
+    } else {
+      // Create new post
+      addBlogPost(title, content, currentImageBase64, tags, youtubeUrl, vimeoUrl, links, category, imagePosition, published);
+      showMessage(published ? 'Post published successfully!' : 'Post saved as draft!', 'success');
+    }
     
     // Reset form
     document.getElementById('post-form').reset();
     removeImage();
-    
-    // Show success message
-    showMessage(published ? 'Post published successfully!' : 'Post saved as draft!', 'success');
     
     // Refresh posts list
     displayPostsList();
@@ -493,6 +515,7 @@ function displayPostsList() {
         <div class="post-item-actions">
           <span class="post-date">${formatDate(post.date)}</span>
           ${post.category ? `<span class="blog-category">${escapeHtml(post.category)}</span>` : ''}
+          <button onclick="editPost('${post.id}')" class="edit-btn">Edit</button>
           <button onclick="togglePublishStatus('${post.id}')" class="publish-btn ${post.published ? 'published' : 'draft'}">
             ${post.published ? 'Unpublish' : 'Publish'}
           </button>
@@ -518,6 +541,108 @@ function togglePublishStatus(postId) {
     displayPostsList();
     showMessage(post.published ? 'Post published!' : 'Post unpublished (draft)', 'success');
   }
+}
+
+// Edit a post
+function editPost(postId) {
+  const posts = getBlogPosts();
+  const post = posts.find(p => p.id === postId);
+  
+  if (!post) {
+    alert('Post not found.');
+    return;
+  }
+
+  // Populate form with post data
+  document.getElementById('post-title').value = post.title || '';
+  document.getElementById('post-content').value = post.content || '';
+  document.getElementById('post-tags').value = post.tags ? post.tags.join(', ') : '';
+  document.getElementById('post-category').value = post.category || '';
+  document.getElementById('post-youtube').value = post.youtubeUrl || '';
+  document.getElementById('post-vimeo').value = post.vimeoUrl || '';
+  document.getElementById('post-links').value = post.links ? post.links.join('\n') : '';
+  document.getElementById('post-published').checked = post.published !== false;
+  
+  // Set image position if available
+  const imagePositionSelect = document.getElementById('post-image-position');
+  if (imagePositionSelect && post.imagePosition) {
+    imagePositionSelect.value = post.imagePosition;
+  }
+  
+  // Handle image preview
+  if (post.image) {
+    currentImageBase64 = post.image;
+    const preview = document.getElementById('image-preview');
+    if (preview) {
+      preview.innerHTML = `
+        <img src="${post.image}" alt="Preview" style="max-width: 100%; max-height: 300px; border-radius: 6px; margin-top: 10px;">
+        <button type="button" onclick="removeImage()" class="remove-image-btn">Remove Image</button>
+      `;
+    }
+  }
+  
+  // Store the post ID being edited
+  const form = document.getElementById('post-form');
+  if (form) {
+    form.setAttribute('data-editing-post-id', postId);
+  }
+  
+  // Update submit button text
+  const submitBtn = form.querySelector('.submit-btn');
+  if (submitBtn) {
+    submitBtn.textContent = 'Update Post';
+  }
+  
+  // Show cancel button
+  showCancelEditButton();
+  
+  // Scroll to form
+  form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  
+  showMessage('Editing post. Update and click "Update Post" to save changes.', 'success');
+}
+
+// Show cancel edit button
+function showCancelEditButton() {
+  const form = document.getElementById('post-form');
+  if (!form) return;
+  
+  // Check if cancel button already exists
+  if (document.getElementById('cancel-edit-btn')) return;
+  
+  const buttonContainer = form.querySelector('div[style*="display: flex"]');
+  if (buttonContainer) {
+    const cancelBtn = document.createElement('button');
+    cancelBtn.type = 'button';
+    cancelBtn.id = 'cancel-edit-btn';
+    cancelBtn.className = 'cancel-edit-btn';
+    cancelBtn.textContent = 'Cancel';
+    cancelBtn.onclick = cancelEdit;
+    buttonContainer.insertBefore(cancelBtn, buttonContainer.firstChild);
+  }
+}
+
+// Cancel editing
+function cancelEdit() {
+  const form = document.getElementById('post-form');
+  if (form) {
+    form.removeAttribute('data-editing-post-id');
+    form.reset();
+  }
+  
+  // Remove cancel button
+  const cancelBtn = document.getElementById('cancel-edit-btn');
+  if (cancelBtn) cancelBtn.remove();
+  
+  // Reset submit button text
+  const submitBtn = form.querySelector('.submit-btn');
+  if (submitBtn) {
+    const publishCheckbox = document.getElementById('post-published');
+    submitBtn.textContent = publishCheckbox && publishCheckbox.checked ? 'Publish Post' : 'Save as Draft';
+  }
+  
+  removeImage();
+  showMessage('Edit cancelled.', 'success');
 }
 
 // Delete a post

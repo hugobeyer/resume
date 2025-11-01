@@ -252,6 +252,12 @@ a:hover {
   letter-spacing: 0.5px;
 }
 
+.tagline:nth-of-type(2) {
+  font-size: 13px;
+  opacity: 0.85;
+  font-weight: 400;
+}
+
 .meta {
   text-align: right;
   font-size: 13px;
@@ -505,10 +511,30 @@ body.printable-mode .line-number-column {
   justify-content: space-between;
   align-items: center;
   z-index: 10;
+  gap: 12px;
+}
+
+.link-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--accent);
+  opacity: 0.8;
+  transition: opacity 0.2s;
+  margin-right: 4px;
+}
+
+.social-link:hover .link-icon {
+  opacity: 1;
 }
 
 .link-text {
   flex: 1;
+  margin-right: 8px;
+}
+
+.blink-arrows {
+  margin-left: 8px;
 }
 
 .hover-popup {
