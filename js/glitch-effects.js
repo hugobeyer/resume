@@ -1,11 +1,14 @@
 // 🎮 SPREADING CHARACTER GLITCH WITH PARALLEL TIMINGS 🎮
 function triggerCharGlitch() {
-  const glitchableElements = document.querySelectorAll('h1 > *:not(.theme-switcher), h2, h3, .role, .tagline, .where, p, li');
+  const glitchableElements = document.querySelectorAll('h1 > *:not(.theme-switcher), h2, h3, .role, .tagline, .where, p:not(.blog-content p), li:not(.blog-content li)');
 
   if (glitchableElements.length === 0) return;
 
   // Pick random element
   const randomElement = glitchableElements[Math.floor(Math.random() * glitchableElements.length)];
+  
+  // Skip if element is inside blog-content
+  if (randomElement.closest('.blog-content')) return;
   const text = randomElement.textContent;
 
   if (!text || text.length === 0) return;
@@ -81,9 +84,12 @@ function glitchLoop() {
 
 // 🎮 ROW EFFECTS - BLINK, WATERFALL CASCADE, OR VSYNC 🎮
 function triggerRowEffect() {
-  const blinkableElements = document.querySelectorAll('h1, h2, h3, .role, .tagline, .where, p, li, .subline');
+  const blinkableElements = document.querySelectorAll('h1, h2:not(.blog-content h2), h3:not(.blog-content h3), .role, .tagline, .where, p:not(.blog-content p), li:not(.blog-content li), .subline');
 
   if (blinkableElements.length === 0) return;
+  
+  // Filter out elements inside blog-content
+  const filteredElements = Array.from(blinkableElements).filter(el => !el.closest('.blog-content'));
 
   // Randomly choose effect type
   const rand = Math.random();
@@ -96,7 +102,7 @@ function triggerRowEffect() {
     const waterfallCount = 5 + Math.floor(Math.random() * 6);
 
     for (let i = 0; i < waterfallCount; i++) {
-      const randomElement = blinkableElements[Math.floor(Math.random() * blinkableElements.length)];
+      const randomElement = filteredElements[Math.floor(Math.random() * filteredElements.length)];
 
       // Stagger each row's waterfall (0-300ms apart)
       const cascadeDelay = i * (30 + Math.random() * 54);
@@ -112,7 +118,7 @@ function triggerRowEffect() {
     const effectCount = 1 + Math.floor(Math.random() * 3);
 
     for (let i = 0; i < effectCount; i++) {
-      const randomElement = blinkableElements[Math.floor(Math.random() * blinkableElements.length)];
+      const randomElement = filteredElements[Math.floor(Math.random() * filteredElements.length)];
 
       if (effectType === 'vsync') {
         randomElement.classList.add('vsync-glitch');
