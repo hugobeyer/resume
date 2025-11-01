@@ -255,14 +255,18 @@ let messageTimeout; // Store timeout ID to reset timing
 
 window.switchTheme = function() {
   try {
-    // WHITE FLASH on click
+    // Background color flash on click (subtle, slow)
     document.body.style.transition = 'none';
-    document.body.style.backgroundColor = '#adadad';
+    const currentBg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim();
+    // Slightly lighter version of background
+    document.body.style.backgroundColor = currentBg || '#1a1a1a';
+    document.body.style.filter = 'brightness(1.3)';
 
     setTimeout(() => {
-      document.body.style.transition = 'background-color 0.8s ease, color .6s ease';
+      document.body.style.transition = 'background-color 1.2s ease, color 1s ease, filter 1.5s ease-out';
       document.body.style.backgroundColor = '';
-    }, 80);
+      document.body.style.filter = '';
+    }, 100);
 
     const newTheme = generateSmartTheme();
     applyTheme(newTheme);

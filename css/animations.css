@@ -1,4 +1,4 @@
-/* Character flash with noise */
+/* Character flash - subtle white */
 @keyframes charFlashNoise {
   0% {
     background-color: transparent;
@@ -7,25 +7,25 @@
     filter: none;
   }
   10% {
-    background-color: var(--accent);
-    color: var(--bg);
-    box-shadow: 0 0 4px var(--accent);
-    filter: contrast(1.2) brightness(1.1);
+    background-color: rgba(255, 255, 255, 0.075);
+    color: inherit;
+    box-shadow: 0 0 1px rgba(255, 255, 255, 0.15);
+    filter: contrast(1.025) brightness(1.025);
   }
   20% {
     background-color: transparent;
-    filter: contrast(1.1);
+    filter: contrast(1.01);
   }
   30% {
-    background-color: var(--link);
-    color: var(--bg);
-    box-shadow: 0 0 4px var(--link);
-    filter: contrast(1.2) brightness(1.1);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: inherit;
+    box-shadow: 0 0 1px rgba(255, 255, 255, 0.1);
+    filter: contrast(1.025) brightness(1.015);
   }
   50% {
-    background-color: var(--accent);
-    color: var(--bg);
-    filter: contrast(1.15);
+    background-color: rgba(255, 255, 255, 0.06);
+    color: inherit;
+    filter: contrast(1.02);
   }
   100% {
     background-color: transparent;
@@ -49,7 +49,7 @@
   90% { opacity: 0.12; }
 }
 
-/* Character glitch - EXTREME varied timings with noise fade */
+/* Character glitch - reduced intensity, faster */
 @keyframes charFlashFadeNoise {
   0% {
     background-color: transparent;
@@ -58,33 +58,33 @@
     filter: none;
   }
   15% {
-    background-color: var(--accent);
-    color: var(--bg);
-    box-shadow: 0 0 6px var(--accent);
-    filter: contrast(1.3) brightness(1.2) saturate(1.5);
+    background-color: rgba(255, 255, 255, 0.15);
+    color: inherit;
+    box-shadow: 0 0 2px rgba(255, 255, 255, 0.3);
+    filter: contrast(1.08) brightness(1.06);
   }
   35% {
-    background-color: var(--link);
-    color: var(--bg);
-    box-shadow: 0 0 4px var(--link);
-    filter: contrast(1.2) brightness(1.1) blur(0.3px);
+    background-color: rgba(255, 255, 255, 0.1);
+    color: inherit;
+    box-shadow: 0 0 1px rgba(255, 255, 255, 0.2);
+    filter: contrast(1.06) brightness(1.04);
   }
   60% {
-    background-color: var(--accent);
-    color: var(--bg);
-    filter: contrast(1.1) blur(0.5px);
+    background-color: rgba(255, 255, 255, 0.12);
+    color: inherit;
+    filter: contrast(1.04);
   }
   100% {
     background-color: transparent;
     color: inherit;
     box-shadow: none;
-    filter: blur(0.8px) opacity(0);
+    filter: none;
   }
 }
 
-/* Base glitch animation - timing set via inline styles */
+/* Base glitch animation - timing set via inline styles, 2x faster */
 .char-glitch {
-  animation: charFlashFadeNoise 0.53s ease-out;
+  animation: charFlashFadeNoise 0.265s ease-out;
 }
 
 /* Noise overlay for glitch rows */
@@ -107,23 +107,23 @@
   position: relative;
 }
 
-/* Row blink effect - no character changes */
+/* Row blink effect - subtle white */
 @keyframes rowBlink {
   0%, 100% {
     opacity: 1;
     filter: none;
   }
   15% {
-    opacity: 0.5;
-    filter: brightness(1.3) contrast(1.2);
+    opacity: 0.925;
+    filter: brightness(1.04) contrast(1.025);
   }
   30% {
     opacity: 1;
     filter: none;
   }
   45% {
-    opacity: 0.5;
-    filter: brightness(1.5);
+    opacity: 0.94;
+    filter: brightness(1.06);
   }
   60% {
     opacity: 1;
@@ -131,7 +131,7 @@
 }
 
 .row-blink {
-  animation: rowBlink 0.4s ease-in-out;
+  animation: rowBlink 0.2s ease-in-out;
 }
 
 /* Waterfall glitch with noise */
@@ -241,7 +241,7 @@
   background-size: 100% 6px;
   pointer-events: none;
   z-index: 10;
-  animation: scanlineTear 0.25s linear;
+  animation: scanlineTear 0.125s linear;
   mix-blend-mode: screen;
   opacity: 0.3;
 }
@@ -269,7 +269,7 @@
   margin: 3px 0;
   opacity: 0;
   color: var(--muted);
-  transition: opacity 0.8s ease-out;
+  transition: opacity 0.48s ease-out;
   display: flex;
   align-items: baseline;
 }

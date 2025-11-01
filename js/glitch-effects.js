@@ -32,9 +32,9 @@ function triggerCharGlitch() {
 
     if (distance <= spreadRange) {
       // FULLY RANDOM timing per character - your dash pattern!
-      const randomDelay = Math.random() * 1.5; // 0-1.5s random delay
-      const randomDuration = 0.2 + Math.random() * 0.4; // 0.2-0.6s duration
-      const randomOpacity = 0.5 + Math.random() * 0.5; // 0.5-1.0 opacity
+      const randomDelay = Math.random() * 1.125; // 0-1.5s random delay
+      const randomDuration = 0.233 + Math.random() * 0.467; // 0.2-0.6s duration
+      const randomOpacity = 0.435 + Math.random() * 0.715; // 0.5-1.0 opacity
 
       newHTML += `<span class="char-glitch" style="animation-delay: ${randomDelay}s; animation-duration: ${randomDuration}s; opacity: ${randomOpacity};">${text[i]}</span>`;
     } else {
@@ -51,7 +51,7 @@ function triggerCharGlitch() {
   randomElement.innerHTML = newHTML;
 
   // SUPER LONG lifespan for random cascade timings (up to 1.5s delay + 0.6s animation)
-  const lifespan = 2200;
+  const lifespan = 2100;
 
   // Restore after animation
   setTimeout(() => {
@@ -67,7 +67,7 @@ function glitchLoop() {
 
   for (let p = 0; p < burstCount; p++) {
     // COMPLETELY RANDOM stagger per glitch (0-300ms)
-    const randomStagger = Math.random() * 300;
+    const randomStagger = Math.random() * 352;
 
     setTimeout(() => {
       triggerCharGlitch();
@@ -75,7 +75,7 @@ function glitchLoop() {
   }
 
   // RANDOM GAP before next burst (1-4 seconds)
-  const nextBurst = 1000 + Math.random() * 3000;
+  const nextBurst = 1750 + Math.random() * 3412;
   setTimeout(glitchLoop, nextBurst);
 }
 
@@ -99,11 +99,11 @@ function triggerRowEffect() {
       const randomElement = blinkableElements[Math.floor(Math.random() * blinkableElements.length)];
 
       // Stagger each row's waterfall (0-300ms apart)
-      const cascadeDelay = i * (30 + Math.random() * 50);
+      const cascadeDelay = i * (30 + Math.random() * 54);
 
       setTimeout(() => {
         randomElement.classList.add('row-waterfall');
-        setTimeout(() => randomElement.classList.remove('row-waterfall'), 600);
+        setTimeout(() => randomElement.classList.remove('row-waterfall'), 612);
       }, cascadeDelay);
     }
 
@@ -116,10 +116,10 @@ function triggerRowEffect() {
 
       if (effectType === 'vsync') {
         randomElement.classList.add('vsync-glitch');
-        setTimeout(() => randomElement.classList.remove('vsync-glitch'), 250);
+        setTimeout(() => randomElement.classList.remove('vsync-glitch'), 220);
       } else {
         randomElement.classList.add('row-blink');
-        setTimeout(() => randomElement.classList.remove('row-blink'), 400);
+        setTimeout(() => randomElement.classList.remove('row-blink'), 212);
       }
     }
   }
@@ -130,6 +130,6 @@ function rowEffectLoop() {
   triggerRowEffect();
 
   // Random interval (0.8-3 seconds)
-  const nextEffect = 800 + Math.random() * 2200;
+  const nextEffect = 880 + Math.random() * 2420;
   setTimeout(rowEffectLoop, nextEffect);
 }

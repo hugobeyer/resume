@@ -1,11 +1,9 @@
-// 🔥 MOST POPULAR CODING THEMES - VS CODE, SUBLIME, ATOM, JETBRAINS 🔥
+// 🔥 MOST POPULAR CODING THEMES - NO PINK HUES 🔥
 const famousThemes = [
   // Dark+ (VS Code default)
   { name: 'Dark+', bg: 8, bgSat: 12, accent: 207, accentSat: 82, text: 0, textSat: 0 },
   // Monokai Pro
   { name: 'Monokai', bg: 70, bgSat: 15, accent: 55, accentSat: 85, text: 60, textSat: 5 },
-  // Dracula
-  { name: 'Dracula', bg: 231, bgSat: 15, accent: 326, accentSat: 100, text: 60, textSat: 5 },
   // One Dark Pro
   { name: 'One Dark', bg: 220, bgSat: 13, accent: 207, accentSat: 82, text: 220, textSat: 6 },
   // Gruvbox Dark
@@ -30,10 +28,12 @@ const famousThemes = [
   { name: 'Shades Purple', bg: 261, bgSat: 51, accent: 261, accentSat: 100, text: 261, textSat: 10 },
   // Ayu Dark
   { name: 'Ayu Dark', bg: 213, bgSat: 15, accent: 39, accentSat: 95, text: 213, textSat: 6 },
-  // Synthwave 84
-  { name: 'Synthwave', bg: 261, bgSat: 85, accent: 326, accentSat: 100, text: 326, textSat: 20 },
   // Andromeda
   { name: 'Andromeda', bg: 234, bgSat: 16, accent: 125, accentSat: 85, text: 234, textSat: 6 },
-  // Horizon
-  { name: 'Horizon', bg: 345, bgSat: 6, accent: 345, accentSat: 79, text: 345, textSat: 4 }
+  // Horizon (adjusted from 345 to 355 to avoid pink range)
+  { name: 'Horizon', bg: 355, bgSat: 6, accent: 355, accentSat: 79, text: 355, textSat: 4 },
+  // Oceanic Next
+  { name: 'Oceanic', bg: 199, bgSat: 14, accent: 180, accentSat: 85, text: 199, textSat: 5 },
+  // Solarized Dark
+  { name: 'Solarized Dark', bg: 192, bgSat: 100, accent: 68, accentSat: 100, text: 192, textSat: 15 }
 ];
