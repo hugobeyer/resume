@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hugo Beyer — Blog</title>
+  <meta name="description"
+    content="Blog — Hugo Beyer, Technical Artist focused on procedural tools and real‑time workflows." />
+  <!-- External CSS files -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/blog.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Blog",
+    "name": "Hugo Beyer Blog",
+    "author": {
+      "@type": "Person",
+      "name": "Hugo Beyer"
+    }
+  }
+  </script>
+</head>
+
+<body>
+  <div class="editor-layout">
+    <!-- Line number column -->
+    <div class="line-number-column" id="lineNumbers"></div>
+    
+    <!-- Main content -->
+    <div class="content-column">
+      <!-- Glitching VEX code overlay -->
+      <div class="vex-code-overlay">
+        <pre class="vex-line">vector P = point(0, "P");</pre>
+        <pre class="vex-line">v@N = normalize(v@P - point(0, "centroid", 0));</pre>
+        <pre class="vex-line">f@density = chramp("distribution", rand(@ptnum));</pre>
+        <pre class="vex-line">v@Cd = sample_direction_uniform(rand(@ptnum * 7.3));</pre>
+        <pre class="vex-line">matrix3 xform = maketransform(@N, v@up);</pre>
+        <pre class="vex-line">@P += noise(@P * f@scale) * f@amplitude;</pre>
+        <pre class="vex-line">i[]@neighbors = neighbours(0, @ptnum);</pre>
+        <pre class="vex-line">float dist = distance(@P, vector(chv("target")));</pre>
+        <pre class="vex-line">@pscale *= fit01(rand(@id), ch("minscale"), ch("maxscale"));</pre>
+        <pre class="vex-line">setpointattrib(0, "Cd", @ptnum, @Cd, "set");</pre>
+      </div>
+
+  <main class="page">
+    <!-- Header Component Placeholder -->
+    <div id="header-placeholder"></div>
+
+    <div class="grid">
+      <section>
+        <h2>Blog Posts</h2>
+        <div id="blog-posts-container">
+          <!-- Blog posts will be loaded here -->
+        </div>
+      </section>
+
+      <!-- Sidebar Component Placeholder -->
+      <div id="sidebar-placeholder"></div>
+    </div>
+  </main>
+      </div>
+    </div>
+  </div>
+
+  <!-- External JavaScript files -->
+  <script src="js/components.js"></script>
+  <script src="js/color-utils.js"></script>
+  <script src="js/theme-data.js"></script>
+  <script src="js/theme-generator.js"></script>
+  <script src="js/theme-manager.js"></script>
+  <script src="js/glitch-effects.js"></script>
+  <script src="js/vex-console.js"></script>
+  <script src="js/blog.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>

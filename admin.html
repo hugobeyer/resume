@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hugo Beyer — Admin</title>
+  <meta name="description" content="Admin — Hugo Beyer Blog Admin Panel" />
+  <!-- External CSS files -->
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/blog.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Blog Admin"
+  }
+  </script>
+</head>
+
+<body>
+  <div class="editor-layout">
+    <!-- Line number column -->
+    <div class="line-number-column" id="lineNumbers"></div>
+    
+    <!-- Main content -->
+    <div class="content-column">
+      <!-- Glitching VEX code overlay -->
+      <div class="vex-code-overlay">
+        <pre class="vex-line">vector P = point(0, "P");</pre>
+        <pre class="vex-line">v@N = normalize(v@P - point(0, "centroid", 0));</pre>
+        <pre class="vex-line">f@density = chramp("distribution", rand(@ptnum));</pre>
+        <pre class="vex-line">v@Cd = sample_direction_uniform(rand(@ptnum * 7.3));</pre>
+        <pre class="vex-line">matrix3 xform = maketransform(@N, v@up);</pre>
+        <pre class="vex-line">@P += noise(@P * f@scale) * f@amplitude;</pre>
+        <pre class="vex-line">i[]@neighbors = neighbours(0, @ptnum);</pre>
+        <pre class="vex-line">float dist = distance(@P, vector(chv("target")));</pre>
+        <pre class="vex-line">@pscale *= fit01(rand(@id), ch("minscale"), ch("maxscale"));</pre>
+        <pre class="vex-line">setpointattrib(0, "Cd", @ptnum, @Cd, "set");</pre>
+      </div>
+
+  <main class="page">
+    <!-- Header Component Placeholder -->
+    <div id="header-placeholder"></div>
+
+    <!-- Login Form -->
+    <div id="login-container" class="login-container">
+      <div class="grid">
+        <section>
+          <h2>Admin Login</h2>
+          <form id="login-form" class="admin-form">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" id="username" class="form-input" required autocomplete="username">
+            </div>
+
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" id="password" class="form-input" required autocomplete="current-password">
+            </div>
+
+            <button type="submit" class="submit-btn">Sign In</button>
+            <div id="login-error" class="login-error"></div>
+          </form>
+        </section>
+      </div>
+    </div>
+
+    <!-- Admin Content (hidden until authenticated) -->
+    <div id="admin-content" class="admin-content" style="display: none;">
+      <div class="grid">
+        <section>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+            <h2 style="margin: 0;">Create New Post</h2>
+            <button onclick="logout()" class="logout-btn">Logout</button>
+          </div>
+          
+          <form id="post-form" class="admin-form">
+            <div class="form-group">
+              <label for="post-title">Title</label>
+              <input type="text" id="post-title" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+              <label for="post-content">Content</label>
+              <textarea id="post-content" class="form-textarea" rows="15" required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="post-image">Featured Image</label>
+              <input type="file" id="post-image" class="form-input" accept="image/*">
+              <div id="image-preview" class="image-preview"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="post-tags">Tags (comma-separated)</label>
+              <input type="text" id="post-tags" class="form-input" placeholder="Houdini, Unity, Tutorial">
+            </div>
+
+            <div class="form-group">
+              <label for="post-category">Category</label>
+              <input type="text" id="post-category" class="form-input" placeholder="Tutorial, Project, News">
+            </div>
+
+            <div class="form-group">
+              <label for="post-youtube">YouTube Video URL</label>
+              <input type="url" id="post-youtube" class="form-input" placeholder="https://www.youtube.com/watch?v=...">
+              <small class="form-help">Paste any YouTube video URL</small>
+            </div>
+
+            <div class="form-group">
+              <label for="post-vimeo">Vimeo Video URL</label>
+              <input type="url" id="post-vimeo" class="form-input" placeholder="https://vimeo.com/...">
+              <small class="form-help">Paste any Vimeo video URL</small>
+            </div>
+
+            <div class="form-group">
+              <label for="post-links">External Links (one per line)</label>
+              <textarea id="post-links" class="form-textarea" rows="4" placeholder="https://example.com/article&#10;https://another-site.com/page"></textarea>
+              <small class="form-help">Add website links that will show as previews</small>
+            </div>
+
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="post-published" checked>
+                <span>Publish immediately (uncheck to save as draft)</span>
+              </label>
+            </div>
+
+            <div style="display: flex; gap: 12px; margin-top: 20px;">
+              <button type="button" id="preview-btn" class="preview-btn">Preview Post</button>
+              <button type="submit" class="submit-btn">Publish Post</button>
+            </div>
+          </form>
+
+          <h2 style="margin-top: 40px;">Manage Posts</h2>
+          <div id="posts-list-container">
+            <!-- Existing posts will be listed here -->
+          </div>
+
+          <h2 style="margin-top: 40px;">Settings</h2>
+          <form id="settings-form" class="admin-form">
+            <div class="form-group">
+              <label for="tagline-line1">Tagline Line 1</label>
+              <input type="text" id="tagline-line1" class="form-input" placeholder="Technical / Environment Artist —">
+            </div>
+
+            <div class="form-group">
+              <label for="tagline-line2">Tagline Line 2</label>
+              <input type="text" id="tagline-line2" class="form-input" placeholder="Procedural tools | Level | RT pipelines | Houdini | Maya | Unreal | Unity | Godot | Substance Designer">
+            </div>
+
+            <button type="submit" class="submit-btn">Save Settings</button>
+          </form>
+        </section>
+
+        <!-- Sidebar Component Placeholder -->
+        <div id="sidebar-placeholder"></div>
+      </div>
+    </div>
+  </main>
+      </div>
+    </div>
+  </div>
+
+  <!-- External JavaScript files -->
+  <script src="js/components.js"></script>
+  <script src="js/color-utils.js"></script>
+  <script src="js/theme-data.js"></script>
+  <script src="js/theme-generator.js"></script>
+  <script src="js/theme-manager.js"></script>
+  <script src="js/glitch-effects.js"></script>
+  <script src="js/vex-console.js"></script>
+  <script src="js/blog.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/admin.js"></script>
+  <script src="js/app.js"></script>
+</body>
+
+</html>

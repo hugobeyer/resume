@@ -1,0 +1,400 @@
+/* Character flash with noise */
+@keyframes charFlashNoise {
+  0% {
+    background-color: transparent;
+    color: inherit;
+    box-shadow: none;
+    filter: none;
+  }
+  10% {
+    background-color: var(--accent);
+    color: var(--bg);
+    box-shadow: 0 0 4px var(--accent);
+    filter: contrast(1.2) brightness(1.1);
+  }
+  20% {
+    background-color: transparent;
+    filter: contrast(1.1);
+  }
+  30% {
+    background-color: var(--link);
+    color: var(--bg);
+    box-shadow: 0 0 4px var(--link);
+    filter: contrast(1.2) brightness(1.1);
+  }
+  50% {
+    background-color: var(--accent);
+    color: var(--bg);
+    filter: contrast(1.15);
+  }
+  100% {
+    background-color: transparent;
+    color: inherit;
+    box-shadow: none;
+    filter: none;
+  }
+}
+
+/* Noise background for glitch areas */
+@keyframes noiseFlicker {
+  0%, 100% { opacity: 0; }
+  10% { opacity: 0.15; }
+  20% { opacity: 0.05; }
+  30% { opacity: 0.2; }
+  40% { opacity: 0.08; }
+  50% { opacity: 0.18; }
+  60% { opacity: 0.06; }
+  70% { opacity: 0.15; }
+  80% { opacity: 0.1; }
+  90% { opacity: 0.12; }
+}
+
+/* Character glitch - EXTREME varied timings with noise fade */
+@keyframes charFlashFadeNoise {
+  0% {
+    background-color: transparent;
+    color: inherit;
+    box-shadow: none;
+    filter: none;
+  }
+  15% {
+    background-color: var(--accent);
+    color: var(--bg);
+    box-shadow: 0 0 6px var(--accent);
+    filter: contrast(1.3) brightness(1.2) saturate(1.5);
+  }
+  35% {
+    background-color: var(--link);
+    color: var(--bg);
+    box-shadow: 0 0 4px var(--link);
+    filter: contrast(1.2) brightness(1.1) blur(0.3px);
+  }
+  60% {
+    background-color: var(--accent);
+    color: var(--bg);
+    filter: contrast(1.1) blur(0.5px);
+  }
+  100% {
+    background-color: transparent;
+    color: inherit;
+    box-shadow: none;
+    filter: blur(0.8px) opacity(0);
+  }
+}
+
+/* Base glitch animation - timing set via inline styles */
+.char-glitch {
+  animation: charFlashFadeNoise 0.53s ease-out;
+}
+
+/* Noise overlay for glitch rows */
+.glitch-row-active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='6.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.4'/%3E%3C/svg%3E");
+  opacity: 0;
+  animation: noiseFlicker 0.24s ease-in-out;
+  pointer-events: none;
+  z-index: 0;
+  mix-blend-mode: overlay;
+}
+
+.glitch-row-active {
+  position: relative;
+}
+
+/* Row blink effect - no character changes */
+@keyframes rowBlink {
+  0%, 100% {
+    opacity: 1;
+    filter: none;
+  }
+  15% {
+    opacity: 0.5;
+    filter: brightness(1.3) contrast(1.2);
+  }
+  30% {
+    opacity: 1;
+    filter: none;
+  }
+  45% {
+    opacity: 0.5;
+    filter: brightness(1.5);
+  }
+  60% {
+    opacity: 1;
+  }
+}
+
+.row-blink {
+  animation: rowBlink 0.4s ease-in-out;
+}
+
+/* Waterfall glitch with noise */
+@keyframes waterfallNoise {
+  0% {
+    clip-path: inset(0 0 100% 0);
+    filter: none;
+  }
+  20% {
+    clip-path: inset(0 0 60% 0);
+    filter: brightness(1.4) saturate(1.3) blur(0.5px);
+  }
+  40% {
+    clip-path: inset(0 0 30% 0);
+    filter: brightness(1.2) contrast(1.3);
+  }
+  60% {
+    clip-path: inset(0 0 10% 0);
+    filter: brightness(1.1) blur(0.3px);
+  }
+  80% {
+    clip-path: inset(0 0 0% 0);
+    filter: brightness(1.3);
+  }
+  100% {
+    clip-path: inset(0 0 0% 0);
+    filter: none;
+  }
+}
+
+.row-waterfall {
+  position: relative;
+}
+
+.row-waterfall::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.6'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: overlay;
+  animation: waterfallNoise 0.6s ease-out;
+}
+
+/* VSYNC tear effect */
+@keyframes vsyncTear {
+  0%, 100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  10% {
+    transform: translateX(-8px);
+    opacity: 0.8;
+  }
+  20% {
+    transform: translateX(12px);
+    opacity: 0.9;
+  }
+  30% {
+    transform: translateX(-5px);
+    opacity: 0.85;
+  }
+  40% {
+    transform: translateX(7px);
+    opacity: 0.95;
+  }
+  50% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes scanlineTear {
+  0%, 100% {
+    background-position: 0 0;
+    opacity: 0;
+  }
+  50% {
+    background-position: 0 100%;
+    opacity: 0.4;
+  }
+}
+
+.vsync-glitch {
+  animation: vsyncTear 0.15s ease-in-out;
+  position: relative;
+}
+
+.vsync-glitch::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    var(--accent) 2px,
+    var(--accent) 3px
+  );
+  background-size: 100% 6px;
+  pointer-events: none;
+  z-index: 10;
+  animation: scanlineTear 0.25s linear;
+  mix-blend-mode: screen;
+  opacity: 0.3;
+}
+
+/* VEX console at bottom */
+.vex-code-overlay {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  border-top: 1px solid var(--accent);
+  padding: 12px 20px;
+  font-family: Consolas, monospace;
+  font-size: 12px;
+  color: var(--fg);
+  pointer-events: none;
+  z-index: 1000;
+  max-height: 150px;
+  overflow: hidden;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.vex-line {
+  margin: 3px 0;
+  opacity: 0;
+  color: var(--muted);
+  transition: opacity 0.8s ease-out;
+  display: flex;
+  align-items: baseline;
+}
+
+.vex-line.typing {
+  opacity: 1;
+  color: var(--accent);
+}
+
+.vex-line.visible {
+  opacity: 0.6;
+  color: var(--muted);
+}
+
+.vex-line.fading {
+  opacity: 0;
+}
+
+.vex-line pre {
+  margin: 0;
+  display: inline;
+}
+
+/* Line numbers */
+.vex-line::before {
+  content: attr(data-line-num);
+  color: var(--muted);
+  opacity: 0.3;
+  margin-right: 12px;
+  min-width: 25px;
+  text-align: right;
+  font-size: 10px;
+}
+
+/* Indentation - very subtle */
+.vex-line[data-indent="1"] { padding-left: 8px; }
+.vex-line[data-indent="2"] { padding-left: 16px; }
+.vex-line[data-indent="3"] { padding-left: 24px; }
+.vex-line[data-indent="4"] { padding-left: 32px; }
+
+/* Typing cursor */
+@keyframes cursorBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+.typing-cursor {
+  display: inline-block;
+  background: var(--accent);
+  margin-left: 1px;
+  animation: cursorBlink 0.8s infinite;
+}
+
+.typing-cursor::before {
+  content: '█';
+  color: var(--accent);
+  font-weight: normal;
+}
+
+/* Button blink animation */
+@keyframes buttonBlink {
+  0%, 50% { opacity: 1; transform: scale(1); }
+  51%, 100% { opacity: 0.2; transform: scale(0.95); }
+}
+
+/* Button jitter animation */
+@keyframes buttonJitter {
+  0%, 100% { transform: translateX(0); }
+  10% { transform: translateX(-2px) translateY(-1px); }
+  20% { transform: translateX(2px) translateY(1px); }
+  30% { transform: translateX(-1px) translateY(-2px); }
+  40% { transform: translateX(1px) translateY(2px); }
+  50% { transform: translateX(-2px) translateY(1px); }
+  60% { transform: translateX(2px) translateY(-1px); }
+  70% { transform: translateX(-1px) translateY(-1px); }
+  80% { transform: translateX(1px) translateY(1px); }
+  90% { transform: translateX(-1px) translateY(-2px); }
+}
+
+.theme-switcher.blink {
+  animation: buttonBlink 0.8s ease-in-out infinite;
+}
+
+.theme-switcher.jitter {
+  animation: buttonJitter 0.6s ease-in-out infinite;
+}
+
+/* Blinking arrows animation */
+@keyframes blinkArrows {
+  0%, 50% { opacity: 0; }
+  51%, 100% { opacity: 1; }
+}
+
+/* Blinking arrows within the text */
+.blink-arrows {
+  display: inline;
+  color: var(--accent);
+  font-size: inherit;
+  font-weight: bold;
+}
+
+.blink-1 {
+  animation: blinkArrows 1.2s ease-in-out infinite;
+}
+
+.blink-2 {
+  animation: blinkArrows 1.2s ease-in-out infinite;
+  animation-delay: 0.1s;
+}
+
+.blink-3 {
+  animation: blinkArrows 1.2s ease-in-out infinite;
+  animation-delay: 0.2s;
+}
+
+@keyframes bounceIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.3);
+  }
+  50% {
+    transform: translateY(-50%) scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+}

@@ -1,0 +1,590 @@
+/* CSS Custom Properties - Animatable color variables */
+@property --bg {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #1a1a1a;
+}
+@property --fg {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #e6e6e6;
+}
+@property --muted {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #b3b3b3;
+}
+@property --accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ff6600;
+}
+@property --link {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #ffaa00;
+}
+@property --chip {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #2a2a2a;
+}
+@property --rule {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #404040;
+}
+@property --gutter {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #333333;
+}
+@property --role {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #76dfb7;
+}
+
+:root {
+  --bg: #1a1a1a;
+  --fg: #e6e6e6;
+  --muted: #b3b3b3;
+  --accent: #ff6600;
+  --link: #ffaa00;
+  --chip: #2a2a2a;
+  --rule: #404040;
+  --gutter: #333333;
+  --role: #35dacc;
+  --page-w: 1100px;
+  --gap: 14px;
+  --radius: 14px;
+
+  /* Animate the CSS variables themselves */
+  transition: --bg 0.25s ease, --fg 0.35s ease, --muted 0.6s ease, --accent 1.2s ease,
+              --link 0.338s ease, --chip 0.77s ease, --rule 0.44s ease, --gutter 0.66s ease, --role 0.89s ease;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font: 14px/1.6 Consolas, SFMono-Regular, Menlo, Monaco, "Liberation Mono", ui-monospace, monospace;
+}
+
+/* Text selection styling using theme colors */
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+::-moz-selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* Editor layout - flexbox columns */
+.editor-layout {
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Line number column - 30px left column */
+.line-number-column {
+  width: 30px;
+  flex-shrink: 0;
+  background: transparent;
+}
+
+.line-num {
+  /* Intentionally empty - no extra spacing, just numbers */
+  display: block;
+  color: var(--muted);
+  opacity: 0.15;
+  font-size: 11px;
+  font-family: ui-monospace, monospace;
+}
+
+/* Content column - centered */
+.content-column {
+  flex: 1;
+  padding-left: 0;
+  max-width: 1100px;
+  width: 100%;
+}
+
+.page {
+  margin: 40px 0;
+  padding: 0;
+  position: relative;
+}
+
+/* Remove pseudo-element line numbers */
+h1::before, h2::before, h3::before, p::before, li::before, article::before, .subline::before {
+  content: none;
+}
+
+/* Collapse arrows for sections - only main content */
+section > h2::after {
+  content: '▼';
+  margin-left: 8px;
+  font-size: 8px;
+  opacity: 0.5;
+}
+
+/* Remove arrow from sidebar */
+.sidebar h2::after {
+  content: none;
+}
+
+body {
+  counter-reset: line-number;
+}
+
+
+h1,
+h2,
+h3 {
+  margin: 0 0 6px 0
+}
+
+/* Make h3 and p more transparent in left column */
+.grid > section:first-child h3,
+.grid > section:first-child p {
+  opacity: 0.5;
+  color: var(--muted);
+}
+
+h1 {
+  font-size: 28px;
+  letter-spacing: .2px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+h1 a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s ease;
+}
+
+h1 a:hover {
+  color: var(--accent);
+  cursor: pointer;
+}
+
+h2 {
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  color: var(--accent);
+  margin-top: 28px;
+  position: relative;
+  padding-left: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  display: flex;
+  align-items: center;
+}
+
+p {
+  margin: 0
+}
+
+a {
+  color: var(--link);
+  text-decoration: none
+}
+
+a:hover {
+  text-decoration: underline
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.6fr .8fr;
+  gap: 36px;
+  position: relative;
+  padding-left: 30px;
+}
+
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--gap);
+  align-items: flex-start;
+  margin-bottom: 24px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 18px;
+  position: relative;
+}
+
+/* Header accent line - no gradient */
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--accent);
+  opacity: 0.3;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  gap: 6px
+}
+
+.tagline {
+  color: var(--accent);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 16px;
+  margin-top: 8px;
+  margin-bottom: 12px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.meta {
+  text-align: right;
+  font-size: 13px;
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px
+}
+
+.chip {
+  background: var(--chip);
+  padding: 4px 10px;
+  border-radius: 8px;
+  border: none;
+  box-shadow: none;
+  font-family: Consolas, SFMono-Regular, Menlo, Monaco, "Liberation Mono", ui-monospace, monospace;
+  font-size: 13.5px;
+  gap: 10px;
+  align-items: baseline;
+  justify-content: space-between
+}
+
+.role {
+  font-weight: bold;
+  font-size: 18px;
+  color: var(--complementary);
+}
+
+.where {
+  color: var(--muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace
+}
+
+.when {
+  color: var(--muted);
+  white-space: nowrap;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace
+}
+
+.subline {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  color: var(--muted);
+  opacity: .85
+}
+
+.item {
+  margin-bottom: 26px;
+}
+
+
+.bullets {
+  margin: 6px 0 0 0;
+  padding-left: 18px;
+}
+
+
+.bullets li {
+  margin: 6px 0
+}
+
+.bullets li::marker {
+  color: var(--accent)
+}
+
+.rule {
+  height: 1px;
+  background: var(--rule);
+  margin: 20px 0
+}
+
+.spacer-row {
+  height: 12px;
+}
+
+/* Sidebar styled as subtle popup window - no line numbers */
+aside.sidebar {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 20px;
+  position: relative;
+  padding-top: 40px;
+}
+
+/* Remove line numbers from sidebar */
+.sidebar h2::before, .sidebar section::before, .sidebar p::before {
+  content: none;
+}
+
+/* Subtle popup window title bar */
+aside.sidebar::before {
+  content: '// Skills & Info';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--accent);
+  padding: 5px 12px;
+  font-size: 10px;
+  font-weight: normal;
+  border-radius: 6px 6px 0 0;
+  letter-spacing: 0.5px;
+  opacity: 0.7;
+}
+
+.sidebar section {
+  margin-bottom: 18px;
+}
+
+/* Printable version button */
+.printable-btn {
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  color: var(--fg);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  text-align: center;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.printable-btn:hover {
+  background: rgba(0, 0, 0, 0.3);
+  border-color: var(--accent);
+}
+
+/* Printable mode styles */
+body.printable-mode {
+  background: #ffffff !important;
+}
+
+body.printable-mode *:not(.printable-btn) {
+  color: #000000 !important;
+  background: #ffffff !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+  font-weight: 1500 !important;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+}
+
+body.printable-mode {
+  font-size: 15px !important;
+}
+
+body.printable-mode h1 {
+  position: relative;
+  display: block !important;
+  font-size: 0 !important;
+}
+
+body.printable-mode h1::before {
+  content: "Hugo Beyer";
+  display: block;
+  font-size: 29px !important;
+}
+
+body.printable-mode h1 > * {
+  display: none !important;
+}
+
+body.printable-mode h2 {
+  font-size: 13.5px !important;
+}
+
+body.printable-mode h3 {
+  font-size: calc(1em + 1px) !important;
+}
+
+body.printable-mode .printable-btn {
+  background: #f5f5f5 !important;
+  border-color: #000000 !important;
+  color: #000000 !important;
+  cursor: pointer !important;
+}
+
+body.printable-mode .vex-code-overlay,
+body.printable-mode .glitch-effect,
+body.printable-mode .blink-arrows,
+body.printable-mode .hover-popup,
+body.printable-mode .theme-switcher,
+body.printable-mode .sassy-message {
+  display: none !important;
+}
+
+body.printable-mode a {
+  color: #000000 !important;
+  text-decoration: none !important;
+}
+
+body.printable-mode a:not(.printable-btn)::after {
+  content: "" !important;
+}
+
+/* Remove any ::after content from all links */
+a::after {
+  content: none !important;
+}
+
+body.printable-mode a::after {
+  content: none !important;
+}
+
+body.printable-mode .sidebar {
+  background: #ffffff !important;
+  border: none !important;
+}
+
+body.printable-mode .chip {
+  background: #f5f5f5 !important;
+  border: none !important;
+  color: #000000 !important;
+}
+
+body.printable-mode .rule {
+  background: #000000 !important;
+  border: none !important;
+}
+
+body.printable-mode .line-number-column {
+  display: none !important;
+}
+
+
+.links a {
+  display: block
+}
+
+/* Social link hover text */
+.social-link {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+}
+
+.link-text {
+  flex: 1;
+}
+
+.hover-popup {
+  display: none !important;
+}
+
+.social-link:hover .hover-popup {
+  display: none !important;
+}
+
+/* Remove all link titles/tooltips */
+a {
+  title: none !important;
+}
+
+a[title] {
+  title: "" !important;
+}
+
+/* Theme Switcher - more visible, no glitch effects */
+.theme-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 20px;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  transition: ease-in-out 0.01s;
+  font-weight: 1600;
+  text-transform: uppercase;
+  letter-spacing: 0.45px;
+}
+
+.theme-switcher:hover {
+  opacity: 1;
+  transform: translateY(-1px);
+  color: #ffffff;
+  background: #000000;
+  border: 1px solid var(--accent);
+}
+
+/* Prevent glitch effects on button */
+.theme-switcher, .theme-switcher * {
+  pointer-events: auto !important;
+}
+
+/* Sassy message styling */
+.sassy-message {
+  margin-left: 20px;
+  color: var(--accent);
+  font-size: 16px;
+  font-style: italic;
+  opacity: 0;
+  transition: opacity 0.1s ease-in-out;
+  font-weight: normal;
+  overflow: hidden;
+  border-right: 2px solid var(--accent);
+  white-space: nowrap;
+  animation: blink-caret 1s step-end infinite;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 4px 8px;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.sassy-message.done-typing {
+  border-right: none;
+  animation: none;
+}
+
+.sassy-message.show {
+  opacity: 0.8;
+}
