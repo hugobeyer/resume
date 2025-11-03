@@ -1,0 +1,253 @@
+/* Analytics Dashboard Styles */
+
+#analytics-container {
+  margin-top: 20px;
+}
+
+/* Timeframe Filters */
+.analytics-filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.timeframe-btn {
+  padding: 8px 16px;
+  background: var(--chip);
+  color: var(--fg);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.timeframe-btn:hover {
+  background: var(--rule);
+  border-color: var(--accent);
+}
+
+.timeframe-btn.active {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+
+/* Summary Cards */
+.analytics-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.summary-card {
+  background: var(--chip);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+
+.summary-label {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.summary-value {
+  font-size: 32px;
+  font-weight: bold;
+  color: var(--accent);
+}
+
+/* Charts Grid */
+.analytics-charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.chart-container {
+  background: var(--chip);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.chart-container h3 {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  color: var(--fg);
+  font-weight: normal;
+}
+
+.chart-container canvas {
+  max-height: 300px;
+}
+
+/* Lists Grid */
+.analytics-lists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.analytics-list-container {
+  background: var(--chip);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.analytics-list-container h3 {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  color: var(--fg);
+  font-weight: normal;
+}
+
+.analytics-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.analytics-list-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  background: var(--bg);
+  border-radius: 4px;
+  border: 1px solid var(--rule);
+}
+
+.analytics-rank {
+  font-weight: bold;
+  color: var(--accent);
+  min-width: 24px;
+  text-align: center;
+}
+
+.analytics-page,
+.analytics-referrer {
+  flex: 1;
+  color: var(--fg);
+  font-size: 14px;
+  word-break: break-all;
+}
+
+.analytics-count {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: bold;
+}
+
+/* Recent Visits */
+.analytics-recent {
+  background: var(--chip);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 32px;
+}
+
+.analytics-recent h3 {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  color: var(--fg);
+  font-weight: normal;
+}
+
+.analytics-visits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.analytics-visit-item {
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 12px;
+}
+
+.visit-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.visit-page {
+  color: var(--fg);
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.visit-time {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.visit-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+}
+
+.visit-referrer,
+.visit-device {
+  color: var(--muted);
+}
+
+.visit-referrer::before {
+  content: "From: ";
+}
+
+.visit-device::before {
+  content: "Device: ";
+}
+
+/* Actions */
+.analytics-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.analytics-actions .submit-btn,
+.analytics-actions .delete-btn {
+  padding: 10px 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .analytics-charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .analytics-lists-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .analytics-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .visit-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}
+

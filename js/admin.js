@@ -48,6 +48,11 @@ function showAdminContent() {
   
   // Initialize admin functionality
   initAdmin();
+  
+  // Initialize analytics display if available
+  if (typeof initAnalyticsDisplay === 'function') {
+    setTimeout(initAnalyticsDisplay, 100);
+  }
 }
 
 // Show login and hide admin content

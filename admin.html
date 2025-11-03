@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/blog.css">
+  <link rel="stylesheet" href="css/analytics.css">
 
   <script type="application/ld+json">
   {
@@ -167,6 +168,77 @@
             <!-- Existing posts will be listed here -->
           </div>
 
+          <h2 style="margin-top: 40px;">Analytics & Visitor Tracking</h2>
+          <div id="analytics-container">
+            <!-- Timeframe Filters -->
+            <div class="analytics-filters">
+              <button class="timeframe-btn active" data-timeframe="all">All Time</button>
+              <button class="timeframe-btn" data-timeframe="month">Last Month</button>
+              <button class="timeframe-btn" data-timeframe="week">Last Week</button>
+              <button class="timeframe-btn" data-timeframe="today">Today</button>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="analytics-summary">
+              <div class="summary-card">
+                <div class="summary-label">Total Visits</div>
+                <div class="summary-value" id="total-visits">0</div>
+              </div>
+              <div class="summary-card">
+                <div class="summary-label">Unique Visitors</div>
+                <div class="summary-value" id="unique-visitors">0</div>
+              </div>
+              <div class="summary-card">
+                <div class="summary-label">Avg per Day</div>
+                <div class="summary-value" id="avg-per-day">0</div>
+              </div>
+            </div>
+
+            <!-- Charts Grid -->
+            <div class="analytics-charts-grid">
+              <div class="chart-container">
+                <h3>Daily Visits</h3>
+                <canvas id="daily-chart"></canvas>
+              </div>
+              <div class="chart-container">
+                <h3>Weekly Visits</h3>
+                <canvas id="weekly-chart"></canvas>
+              </div>
+              <div class="chart-container">
+                <h3>Hourly Distribution</h3>
+                <canvas id="hourly-chart"></canvas>
+              </div>
+              <div class="chart-container">
+                <h3>Traffic Sources</h3>
+                <canvas id="referrers-chart"></canvas>
+              </div>
+            </div>
+
+            <!-- Top Pages and Referrers -->
+            <div class="analytics-lists-grid">
+              <div class="analytics-list-container">
+                <h3>Top Pages</h3>
+                <div id="top-pages-list" class="analytics-list"></div>
+              </div>
+              <div class="analytics-list-container">
+                <h3>Top Referrers</h3>
+                <div id="top-referrers-list" class="analytics-list"></div>
+              </div>
+            </div>
+
+            <!-- Recent Visits -->
+            <div class="analytics-recent">
+              <h3>Recent Visits</h3>
+              <div id="recent-visits-list" class="analytics-visits-list"></div>
+            </div>
+
+            <!-- Actions -->
+            <div class="analytics-actions">
+              <button onclick="exportAnalyticsData()" class="submit-btn">Export Data</button>
+              <button onclick="clearAnalyticsData()" class="delete-btn">Clear All Data</button>
+            </div>
+          </div>
+
           <h2 style="margin-top: 40px;">Settings</h2>
           <form id="settings-form" class="admin-form">
             <div class="form-group">
@@ -193,6 +265,7 @@
   </div>
 
   <!-- External JavaScript files -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="js/components.js"></script>
   <script src="js/color-utils.js"></script>
   <script src="js/theme-data.js"></script>
@@ -203,6 +276,8 @@
   <script src="js/blog.js"></script>
   <script src="js/settings.js"></script>
   <script src="js/rich-text-editor.js"></script>
+  <script src="js/analytics.js"></script>
+  <script src="js/analytics-display.js"></script>
   <script src="js/admin.js"></script>
   <script src="js/app.js"></script>
 </body>
