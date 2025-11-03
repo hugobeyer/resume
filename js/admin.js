@@ -1,39 +1,186 @@
 // Admin functionality - Create and manage blog posts
 let currentImageBase64 = null;
 
-// Admin credentials
-const ADMIN_USERNAME = 'bugo';
-const ADMIN_PASSWORD = '!123Carthug';
+// Security Configuration
 const AUTH_KEY = 'admin_authenticated';
+const SESSION_TOKEN_KEY = 'admin_session_token';
+const LOGIN_ATTEMPTS_KEY = 'admin_login_attempts';
+const MAX_LOGIN_ATTEMPTS = 5;
+const LOCKOUT_DURATION = 15 * 60 * 1000; // 15 minutes in milliseconds
+const SESSION_DURATION = 8 * 60 * 60 * 1000; // 8 hours
+
+// Hashed credentials (SHA-256 hashes of username and password)
+// These are harder to reverse than plain text passwords
+// Note: For true security, use server-side authentication. This provides basic obfuscation.
+const CREDENTIAL_HASHES = {
+  // Username: 'bugo' (lowercase) -> SHA-256 hash
+  username: '432b2cfa446caf609798e3986fa2ae8be671f052ea4ca7aea3bc674ef7f0bcdf',
+  // Password: '!123Carthug' -> SHA-256 hash  
+  password: '31968e76cfd7c64c4b37e653a244b113a8377046ec35f10dbacb5fdce13b2c75'
+};
+
+// Rate limiting: Check if user is locked out
+function isLockedOut() {
+  const attemptsData = localStorage.getItem(LOGIN_ATTEMPTS_KEY);
+  if (!attemptsData) return false;
+  
+  try {
+    const data = JSON.parse(attemptsData);
+    const now = Date.now();
+    
+    // Check if lockout period has passed
+    if (data.lockedUntil && now < data.lockedUntil) {
+      const minutesLeft = Math.ceil((data.lockedUntil - now) / 60000);
+      return { locked: true, minutesLeft };
+    }
+    
+    // Clear old lockout data
+    if (data.lockedUntil && now >= data.lockedUntil) {
+      localStorage.removeItem(LOGIN_ATTEMPTS_KEY);
+      return false;
+    }
+    
+    return false;
+  } catch (e) {
+    return false;
+  }
+}
+
+// Record failed login attempt
+function recordFailedAttempt() {
+  const attemptsData = localStorage.getItem(LOGIN_ATTEMPTS_KEY);
+  let data = attemptsData ? JSON.parse(attemptsData) : { count: 0, lastAttempt: null };
+  
+  data.count = (data.count || 0) + 1;
+  data.lastAttempt = Date.now();
+  
+  // Lock out after max attempts
+  if (data.count >= MAX_LOGIN_ATTEMPTS) {
+    data.lockedUntil = Date.now() + LOCKOUT_DURATION;
+  }
+  
+  localStorage.setItem(LOGIN_ATTEMPTS_KEY, JSON.stringify(data));
+}
+
+// Clear login attempts (on successful login)
+function clearLoginAttempts() {
+  localStorage.removeItem(LOGIN_ATTEMPTS_KEY);
+}
+
+// Hash a string using SHA-256
+async function hashString(str) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(str);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+}
+
+// Generate session token
+function generateSessionToken() {
+  const randomBytes = new Uint8Array(32);
+  crypto.getRandomValues(randomBytes);
+  return Array.from(randomBytes, b => b.toString(16).padStart(2, '0')).join('');
+}
 
 // Check if user is authenticated
 function isAuthenticated() {
-  return sessionStorage.getItem(AUTH_KEY) === 'true';
+  const token = sessionStorage.getItem(SESSION_TOKEN_KEY);
+  const authStatus = sessionStorage.getItem(AUTH_KEY);
+  
+  if (!token || authStatus !== 'true') return false;
+  
+  // Verify session hasn't expired
+  const sessionData = sessionStorage.getItem('admin_session_data');
+  if (sessionData) {
+    try {
+      const data = JSON.parse(sessionData);
+      const now = Date.now();
+      if (data.expires && now > data.expires) {
+        // Session expired
+        logout();
+        return false;
+      }
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+  
+  return false;
 }
 
 // Set authentication status
 function setAuthenticated(authenticated) {
   if (authenticated) {
+    const token = generateSessionToken();
+    const expires = Date.now() + SESSION_DURATION;
+    
     sessionStorage.setItem(AUTH_KEY, 'true');
+    sessionStorage.setItem(SESSION_TOKEN_KEY, token);
+    sessionStorage.setItem('admin_session_data', JSON.stringify({
+      token: token,
+      expires: expires,
+      created: Date.now()
+    }));
+    
+    clearLoginAttempts();
   } else {
     sessionStorage.removeItem(AUTH_KEY);
+    sessionStorage.removeItem(SESSION_TOKEN_KEY);
+    sessionStorage.removeItem('admin_session_data');
   }
 }
 
 // Handle login form submission
-function handleLogin(event) {
+async function handleLogin(event) {
   event.preventDefault();
+  
+  // Check if locked out
+  const lockoutStatus = isLockedOut();
+  if (lockoutStatus && lockoutStatus.locked) {
+    const errorDiv = document.getElementById('login-error');
+    errorDiv.textContent = `Too many failed attempts. Please try again in ${lockoutStatus.minutesLeft} minute(s).`;
+    errorDiv.style.display = 'block';
+    return;
+  }
   
   const username = document.getElementById('username').value.trim();
   const password = document.getElementById('password').value;
   const errorDiv = document.getElementById('login-error');
   
-  if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-    setAuthenticated(true);
-    showAdminContent();
-    errorDiv.textContent = '';
-  } else {
-    errorDiv.textContent = 'Invalid username or password';
+  if (!username || !password) {
+    errorDiv.textContent = 'Please enter both username and password';
+    errorDiv.style.display = 'block';
+    return;
+  }
+  
+  try {
+    // Hash the input and compare with stored hashes
+    const usernameHash = await hashString(username.toLowerCase());
+    const passwordHash = await hashString(password);
+    
+    // Compare hashes (using timing-safe comparison would be better, but this is acceptable for client-side)
+    if (usernameHash === CREDENTIAL_HASHES.username && passwordHash === CREDENTIAL_HASHES.password) {
+      setAuthenticated(true);
+      showAdminContent();
+      errorDiv.textContent = '';
+      errorDiv.style.display = 'none';
+    } else {
+      recordFailedAttempt();
+      errorDiv.textContent = 'Invalid username or password';
+      errorDiv.style.display = 'block';
+      
+      // Check if now locked out
+      const newLockoutStatus = isLockedOut();
+      if (newLockoutStatus && newLockoutStatus.locked) {
+        errorDiv.textContent = `Too many failed attempts. Account locked for ${newLockoutStatus.minutesLeft} minute(s).`;
+      }
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    errorDiv.textContent = 'An error occurred. Please try again.';
     errorDiv.style.display = 'block';
   }
 }
@@ -72,7 +219,10 @@ function logout() {
   const loginForm = document.getElementById('login-form');
   if (loginForm) loginForm.reset();
   const errorDiv = document.getElementById('login-error');
-  if (errorDiv) errorDiv.textContent = '';
+  if (errorDiv) {
+    errorDiv.textContent = '';
+    errorDiv.style.display = 'none';
+  }
 }
 
 // Initialize admin page
