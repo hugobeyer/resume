@@ -14,7 +14,19 @@ function initAnalytics() {
 }
 
 // Track a visit
-function trackVisit() {
+async function trackVisit() {
+  const urlParams = new URLSearchParams(window.location.search);
+  
+  // Parse UTM parameters (Google Analytics standard)
+  const utmSource = urlParams.get('utm_source') || null;
+  const utmMedium = urlParams.get('utm_medium') || null;
+  const utmCampaign = urlParams.get('utm_campaign') || null;
+  const utmTerm = urlParams.get('utm_term') || null;
+  const utmContent = urlParams.get('utm_content') || null;
+  
+  // Detect traffic source
+  const sourceInfo = detectTrafficSource(document.referrer, utmSource, utmMedium);
+  
   const visit = {
     id: Date.now().toString(),
     timestamp: new Date().toISOString(),
@@ -25,10 +37,246 @@ function trackVisit() {
     screenHeight: window.screen.height,
     language: navigator.language,
     timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    sessionId: getOrCreateSessionId()
+    sessionId: getOrCreateSessionId(),
+    ip: null,
+    country: null,
+    countryCode: null,
+    city: null,
+    region: null,
+    // UTM tracking parameters
+    utmSource: utmSource,
+    utmMedium: utmMedium,
+    utmCampaign: utmCampaign,
+    utmTerm: utmTerm,
+    utmContent: utmContent,
+    // Detected source information
+    sourceType: sourceInfo.type, // 'email', 'social', 'search', 'direct', 'referral', 'unknown'
+    sourceName: sourceInfo.name, // e.g., 'Gmail', 'Facebook', 'Google', etc.
+    sourceCategory: sourceInfo.category, // 'email', 'social', 'search', 'direct', 'referral'
+    isEmail: sourceInfo.isEmail,
+    isSocial: sourceInfo.isSocial,
+    isSearch: sourceInfo.isSearch
   };
 
+  // Fetch IP and location data (non-blocking)
+  try {
+    const locationData = await fetchVisitorLocation();
+    if (locationData) {
+      visit.ip = locationData.ip || null;
+      visit.country = locationData.country || null;
+      visit.countryCode = locationData.countryCode || null;
+      visit.city = locationData.city || null;
+      visit.region = locationData.region || null;
+    }
+  } catch (error) {
+    console.warn('Could not fetch visitor location:', error);
+    // Continue without location data
+  }
+
   saveVisit(visit);
+}
+
+// Detect traffic source from referrer and UTM parameters
+function detectTrafficSource(referrer, utmSource, utmMedium) {
+  const result = {
+    type: 'unknown',
+    name: 'Unknown',
+    category: 'referral',
+    isEmail: false,
+    isSocial: false,
+    isSearch: false
+  };
+
+  // Check UTM parameters first (most reliable)
+  if (utmMedium) {
+    if (utmMedium.toLowerCase() === 'email') {
+      result.type = 'email';
+      result.category = 'email';
+      result.isEmail = true;
+      result.name = utmSource || 'Email';
+      return result;
+    }
+    if (utmMedium.toLowerCase().includes('social') || utmMedium.toLowerCase().includes('social-media')) {
+      result.type = 'social';
+      result.category = 'social';
+      result.isSocial = true;
+      result.name = utmSource || 'Social Media';
+      return result;
+    }
+    if (utmMedium.toLowerCase() === 'cpc' || utmMedium.toLowerCase() === 'paid') {
+      result.type = 'paid';
+      result.category = 'paid';
+      result.name = utmSource || 'Paid Ad';
+      return result;
+    }
+  }
+
+  // If no referrer, it's direct traffic
+  if (!referrer || referrer === '') {
+    result.type = 'direct';
+    result.category = 'direct';
+    result.name = 'Direct';
+    return result;
+  }
+
+  try {
+    const referrerUrl = new URL(referrer);
+    const referrerDomain = referrerUrl.hostname.toLowerCase();
+    const referrerPath = referrerUrl.pathname.toLowerCase();
+
+    // Email client detection
+    const emailDomains = [
+      'mail.google.com', 'gmail.com',
+      'outlook.com', 'outlook.live.com', 'hotmail.com', 'live.com',
+      'yahoo.com', 'mail.yahoo.com',
+      'icloud.com', 'mail.icloud.com',
+      'protonmail.com', 'proton.me',
+      'aol.com', 'mail.aol.com',
+      'zoho.com', 'mail.zoho.com',
+      'gmx.com', 'mail.gmx.com',
+      'yandex.com', 'mail.yandex.com'
+    ];
+
+    if (emailDomains.some(domain => referrerDomain.includes(domain))) {
+      result.type = 'email';
+      result.category = 'email';
+      result.isEmail = true;
+      result.name = extractEmailClientName(referrerDomain);
+      return result;
+    }
+
+    // Social media detection
+    const socialPlatforms = {
+      'facebook.com': 'Facebook',
+      'fb.com': 'Facebook',
+      'twitter.com': 'Twitter',
+      'x.com': 'Twitter/X',
+      'instagram.com': 'Instagram',
+      'linkedin.com': 'LinkedIn',
+      'pinterest.com': 'Pinterest',
+      'reddit.com': 'Reddit',
+      'tiktok.com': 'TikTok',
+      'youtube.com': 'YouTube',
+      'vimeo.com': 'Vimeo',
+      'tumblr.com': 'Tumblr',
+      'snapchat.com': 'Snapchat',
+      'whatsapp.com': 'WhatsApp',
+      'telegram.org': 'Telegram',
+      'discord.com': 'Discord',
+      'messenger.com': 'Facebook Messenger'
+    };
+
+    for (const [domain, name] of Object.entries(socialPlatforms)) {
+      if (referrerDomain.includes(domain)) {
+        result.type = 'social';
+        result.category = 'social';
+        result.isSocial = true;
+        result.name = name;
+        return result;
+      }
+    }
+
+    // Search engine detection
+    const searchEngines = {
+      'google.com': 'Google',
+      'google.': 'Google',
+      'bing.com': 'Bing',
+      'yahoo.com': 'Yahoo',
+      'duckduckgo.com': 'DuckDuckGo',
+      'baidu.com': 'Baidu',
+      'yandex.com': 'Yandex',
+      'ecosia.org': 'Ecosia',
+      'startpage.com': 'Startpage'
+    };
+
+    for (const [domain, name] of Object.entries(searchEngines)) {
+      if (referrerDomain.includes(domain)) {
+        result.type = 'search';
+        result.category = 'search';
+        result.isSearch = true;
+        result.name = name;
+        return result;
+      }
+    }
+
+    // Known referral site
+    result.type = 'referral';
+    result.category = 'referral';
+    result.name = referrerDomain.replace('www.', '');
+    return result;
+
+  } catch (e) {
+    // Invalid referrer URL
+    result.type = 'direct';
+    result.category = 'direct';
+    result.name = 'Direct';
+    return result;
+  }
+}
+
+// Extract email client name from domain
+function extractEmailClientName(domain) {
+  if (domain.includes('gmail') || domain.includes('google')) return 'Gmail';
+  if (domain.includes('outlook') || domain.includes('hotmail') || domain.includes('live')) return 'Outlook';
+  if (domain.includes('yahoo')) return 'Yahoo Mail';
+  if (domain.includes('icloud')) return 'iCloud Mail';
+  if (domain.includes('proton')) return 'ProtonMail';
+  if (domain.includes('aol')) return 'AOL Mail';
+  if (domain.includes('zoho')) return 'Zoho Mail';
+  if (domain.includes('gmx')) return 'GMX';
+  if (domain.includes('yandex')) return 'Yandex Mail';
+  return 'Email';
+}
+
+// Fetch visitor IP and location data
+async function fetchVisitorLocation() {
+  try {
+    // Using ipapi.co free API (no API key required for basic usage)
+    const response = await fetch('https://ipapi.co/json/', {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Location API failed');
+    }
+
+    const data = await response.json();
+    
+    return {
+      ip: data.ip || null,
+      country: data.country_name || null,
+      countryCode: data.country_code || null,
+      city: data.city || null,
+      region: data.region || null
+    };
+  } catch (error) {
+    // Fallback to alternative API
+    try {
+      const fallbackResponse = await fetch('https://api.ipify.org?format=json');
+      const ipData = await fallbackResponse.json();
+      
+      // Try to get country from ip-api.com
+      const geoResponse = await fetch(`https://ip-api.com/json/${ipData.ip}?fields=status,message,country,countryCode,city,regionName`);
+      const geoData = await geoResponse.json();
+      
+      if (geoData.status === 'success') {
+        return {
+          ip: ipData.ip || null,
+          country: geoData.country || null,
+          countryCode: geoData.countryCode || null,
+          city: geoData.city || null,
+          region: geoData.regionName || null
+        };
+      }
+    } catch (fallbackError) {
+      console.warn('Fallback location API also failed:', fallbackError);
+    }
+    
+    return null;
+  }
 }
 
 // Get or create session ID
@@ -140,6 +388,12 @@ function getAnalyticsStats(timeframe = 'all') {
   const hourlyData = {};
   const dailyData = {};
   const weeklyData = {};
+  const countries = {};
+  const ips = {};
+  const sources = {}; // Traffic sources (email, social, search, etc.)
+  const sourceCategories = {}; // Source categories
+  const campaigns = {}; // UTM campaigns
+  const mediums = {}; // UTM mediums
 
   filteredVisits.forEach(visit => {
     const date = new Date(visit.timestamp);
@@ -151,6 +405,35 @@ function getAnalyticsStats(timeframe = 'all') {
     // Referrers
     const referrer = visit.referrer === 'direct' ? 'Direct' : extractDomain(visit.referrer);
     referrers[referrer] = (referrers[referrer] || 0) + 1;
+    
+    // Traffic sources
+    const sourceName = visit.sourceName || visit.utmSource || 'Unknown';
+    sources[sourceName] = (sources[sourceName] || 0) + 1;
+    
+    // Source categories
+    const category = visit.sourceCategory || 'direct';
+    sourceCategories[category] = (sourceCategories[category] || 0) + 1;
+    
+    // Campaigns
+    if (visit.utmCampaign) {
+      campaigns[visit.utmCampaign] = (campaigns[visit.utmCampaign] || 0) + 1;
+    }
+    
+    // Mediums
+    if (visit.utmMedium) {
+      mediums[visit.utmMedium] = (mediums[visit.utmMedium] || 0) + 1;
+    }
+    
+    // Countries
+    if (visit.country) {
+      const countryKey = visit.country;
+      countries[countryKey] = (countries[countryKey] || 0) + 1;
+    }
+    
+    // IP addresses (for unique visitor tracking)
+    if (visit.ip) {
+      ips[visit.ip] = (ips[visit.ip] || 0) + 1;
+    }
     
     // Hourly data
     const hour = date.getHours();
@@ -177,17 +460,55 @@ function getAnalyticsStats(timeframe = 'all') {
     .slice(0, 10)
     .map(([referrer, count]) => ({ referrer, count }));
 
+  // Get top countries
+  const topCountries = Object.entries(countries)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10)
+    .map(([country, count]) => ({ country, count }));
+
+  // Get top sources
+  const topSources = Object.entries(sources)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10)
+    .map(([source, count]) => ({ source, count }));
+
+  // Get top campaigns
+  const topCampaigns = Object.entries(campaigns)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10)
+    .map(([campaign, count]) => ({ campaign, count }));
+
+  // Count unique IPs
+  const uniqueIPs = Object.keys(ips).length;
+
+  // Count email visits
+  const emailVisits = filteredVisits.filter(v => v.isEmail).length;
+  const socialVisits = filteredVisits.filter(v => v.isSocial).length;
+  const searchVisits = filteredVisits.filter(v => v.isSearch).length;
+
   return {
     totalVisits: filteredVisits.length,
-    uniqueVisitors: uniqueSessions, // Using sessions as proxy for unique visitors
+    uniqueVisitors: uniqueIPs > 0 ? uniqueIPs : uniqueSessions, // Use IPs if available, else sessions
     uniqueSessions: uniqueSessions,
+    uniqueIPs: uniqueIPs,
+    emailVisits: emailVisits,
+    socialVisits: socialVisits,
+    searchVisits: searchVisits,
     pageViews,
     referrers,
+    countries,
+    sources,
+    sourceCategories,
+    campaigns,
+    mediums,
     hourlyData,
     dailyData,
     weeklyData,
     topPages,
     topReferrers,
+    topCountries,
+    topSources,
+    topCampaigns,
     allVisits: filteredVisits
   };
 }

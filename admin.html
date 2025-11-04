@@ -192,6 +192,18 @@
                 <div class="summary-label">Avg per Day</div>
                 <div class="summary-value" id="avg-per-day">0</div>
               </div>
+              <div class="summary-card">
+                <div class="summary-label">📧 Email Visits</div>
+                <div class="summary-value" id="email-visits">0</div>
+              </div>
+              <div class="summary-card">
+                <div class="summary-label">📱 Social Visits</div>
+                <div class="summary-value" id="social-visits">0</div>
+              </div>
+              <div class="summary-card">
+                <div class="summary-label">🔍 Search Visits</div>
+                <div class="summary-value" id="search-visits">0</div>
+              </div>
             </div>
 
             <!-- Charts Grid -->
@@ -209,12 +221,20 @@
                 <canvas id="hourly-chart"></canvas>
               </div>
               <div class="chart-container">
-                <h3>Traffic Sources</h3>
+                <h3>Referrers</h3>
                 <canvas id="referrers-chart"></canvas>
+              </div>
+              <div class="chart-container">
+                <h3>Countries</h3>
+                <canvas id="countries-chart"></canvas>
+              </div>
+              <div class="chart-container">
+                <h3>Source Categories</h3>
+                <canvas id="sources-chart"></canvas>
               </div>
             </div>
 
-            <!-- Top Pages and Referrers -->
+            <!-- Top Pages, Referrers, and Countries -->
             <div class="analytics-lists-grid">
               <div class="analytics-list-container">
                 <h3>Top Pages</h3>
@@ -223,6 +243,18 @@
               <div class="analytics-list-container">
                 <h3>Top Referrers</h3>
                 <div id="top-referrers-list" class="analytics-list"></div>
+              </div>
+              <div class="analytics-list-container">
+                <h3>Top Countries</h3>
+                <div id="top-countries-list" class="analytics-list"></div>
+              </div>
+              <div class="analytics-list-container">
+                <h3>Top Sources</h3>
+                <div id="top-sources-list" class="analytics-list"></div>
+              </div>
+              <div class="analytics-list-container">
+                <h3>Top Campaigns</h3>
+                <div id="top-campaigns-list" class="analytics-list"></div>
               </div>
             </div>
 

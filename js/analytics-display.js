@@ -25,6 +25,15 @@ function loadAnalyticsData(timeframe = 'all') {
   updateTopPages(stats.topPages);
   updateTopReferrers(stats.topReferrers);
   
+  // Update top countries
+  updateTopCountries(stats.topCountries);
+  
+  // Update top sources
+  updateTopSources(stats.topSources);
+  
+  // Update top campaigns
+  updateTopCampaigns(stats.topCampaigns);
+  
   // Update recent visits
   updateRecentVisits(stats.allVisits);
 }
@@ -34,6 +43,9 @@ function updateSummaryCards(stats) {
   const totalVisitsEl = document.getElementById('total-visits');
   const uniqueVisitorsEl = document.getElementById('unique-visitors');
   const avgPerDayEl = document.getElementById('avg-per-day');
+  const emailVisitsEl = document.getElementById('email-visits');
+  const socialVisitsEl = document.getElementById('social-visits');
+  const searchVisitsEl = document.getElementById('search-visits');
   
   if (totalVisitsEl) totalVisitsEl.textContent = stats.totalVisits.toLocaleString();
   if (uniqueVisitorsEl) uniqueVisitorsEl.textContent = stats.uniqueVisitors.toLocaleString();
@@ -42,6 +54,11 @@ function updateSummaryCards(stats) {
   const days = Object.keys(stats.dailyData).length || 1;
   const avgPerDay = (stats.totalVisits / days).toFixed(1);
   if (avgPerDayEl) avgPerDayEl.textContent = avgPerDay;
+  
+  // Source statistics
+  if (emailVisitsEl) emailVisitsEl.textContent = (stats.emailVisits || 0).toLocaleString();
+  if (socialVisitsEl) socialVisitsEl.textContent = (stats.socialVisits || 0).toLocaleString();
+  if (searchVisitsEl) searchVisitsEl.textContent = (stats.searchVisits || 0).toLocaleString();
 }
 
 // Setup timeframe filter buttons
@@ -66,6 +83,8 @@ function renderCharts(stats, timeframe) {
   renderWeeklyChart(stats.weeklyData);
   renderHourlyChart(stats.hourlyData);
   renderReferrersChart(stats.referrers);
+  renderCountriesChart(stats.countries);
+  renderSourcesChart(stats.sourceCategories);
 }
 
 // Get CSS variable value
@@ -275,6 +294,80 @@ function renderHourlyChart(hourlyData) {
   });
 }
 
+// Render countries chart
+function renderCountriesChart(countries) {
+  const ctx = document.getElementById('countries-chart');
+  if (!ctx) return;
+
+  const sorted = Object.entries(countries)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 10);
+  
+  const labels = sorted.map(([country]) => country);
+  const data = sorted.map(([, count]) => count);
+
+  if (analyticsCharts.countries) {
+    analyticsCharts.countries.destroy();
+  }
+
+  const accentColor = getCSSVariable('--accent') || '#ff6600';
+  const linkColor = getCSSVariable('--link') || '#ffaa00';
+  const roleColor = getCSSVariable('--role') || '#35dacc';
+  const fgColor = getCSSVariable('--fg') || '#e6e6e6';
+
+  analyticsCharts.countries = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Visits',
+        data: data,
+        backgroundColor: [
+          accentColor,
+          linkColor,
+          roleColor,
+          '#ff8c42',
+          '#ffb366',
+          '#ffcc99',
+          '#ffe6cc',
+          '#cc5500',
+          '#993300',
+          '#661100'
+        ],
+        borderRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            color: getCSSVariable('--muted') || '#b3b3b3'
+          },
+          grid: {
+            color: getCSSVariable('--rule') || '#404040'
+          }
+        },
+        x: {
+          ticks: {
+            color: getCSSVariable('--muted') || '#b3b3b3'
+          },
+          grid: {
+            color: getCSSVariable('--rule') || '#404040'
+          }
+        }
+      }
+    }
+  });
+}
+
 // Render referrers chart
 function renderReferrersChart(referrers) {
   const ctx = document.getElementById('referrers-chart');
@@ -372,6 +465,119 @@ function updateTopReferrers(topReferrers) {
   `).join('');
 }
 
+// Update top countries list
+function updateTopCountries(topCountries) {
+  const container = document.getElementById('top-countries-list');
+  if (!container) return;
+
+  if (topCountries.length === 0) {
+    container.innerHTML = '<p style="opacity: 0.5; padding-left: 20px;">No country data yet.</p>';
+    return;
+  }
+
+  container.innerHTML = topCountries.map((item, index) => `
+    <div class="analytics-list-item">
+      <span class="analytics-rank">${index + 1}</span>
+      <span class="analytics-country">${escapeHtml(item.country)}</span>
+      <span class="analytics-count">${item.count.toLocaleString()}</span>
+    </div>
+  `).join('');
+}
+
+// Update top sources list
+function updateTopSources(topSources) {
+  const container = document.getElementById('top-sources-list');
+  if (!container) return;
+
+  if (topSources.length === 0) {
+    container.innerHTML = '<p style="opacity: 0.5; padding-left: 20px;">No source data yet.</p>';
+    return;
+  }
+
+  container.innerHTML = topSources.map((item, index) => `
+    <div class="analytics-list-item">
+      <span class="analytics-rank">${index + 1}</span>
+      <span class="analytics-source">${escapeHtml(item.source)}</span>
+      <span class="analytics-count">${item.count.toLocaleString()}</span>
+    </div>
+  `).join('');
+}
+
+// Update top campaigns list
+function updateTopCampaigns(topCampaigns) {
+  const container = document.getElementById('top-campaigns-list');
+  if (!container) return;
+
+  if (topCampaigns.length === 0) {
+    container.innerHTML = '<p style="opacity: 0.5; padding-left: 20px;">No campaigns yet.</p>';
+    return;
+  }
+
+  container.innerHTML = topCampaigns.map((item, index) => `
+    <div class="analytics-list-item">
+      <span class="analytics-rank">${index + 1}</span>
+      <span class="analytics-campaign">${escapeHtml(item.campaign)}</span>
+      <span class="analytics-count">${item.count.toLocaleString()}</span>
+    </div>
+  `).join('');
+}
+
+// Render sources chart (source categories)
+function renderSourcesChart(sourceCategories) {
+  const ctx = document.getElementById('sources-chart');
+  if (!ctx) return;
+
+  const sorted = Object.entries(sourceCategories)
+    .sort((a, b) => b[1] - a[1]);
+  
+  const labels = sorted.map(([category]) => category.charAt(0).toUpperCase() + category.slice(1));
+  const data = sorted.map(([, count]) => count);
+
+  if (analyticsCharts.sources) {
+    analyticsCharts.sources.destroy();
+  }
+
+  const accentColor = getCSSVariable('--accent') || '#ff6600';
+  const linkColor = getCSSVariable('--link') || '#ffaa00';
+  const roleColor = getCSSVariable('--role') || '#35dacc';
+  const mutedColor = getCSSVariable('--muted') || '#b3b3b3';
+  const ruleColor = getCSSVariable('--rule') || '#404040';
+
+  analyticsCharts.sources = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: labels,
+      datasets: [{
+        data: data,
+        backgroundColor: [
+          accentColor,
+          linkColor,
+          roleColor,
+          '#ff8c42',
+          '#ffb366',
+          '#ffcc99',
+          '#ffe6cc'
+        ]
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: {
+            color: getCSSVariable('--fg') || '#e6e6e6',
+            font: {
+              size: 12
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
 // Update recent visits list
 function updateRecentVisits(visits) {
   const container = document.getElementById('recent-visits-list');
@@ -387,18 +593,37 @@ function updateRecentVisits(visits) {
     return;
   }
 
-  container.innerHTML = recent.map(visit => `
+  container.innerHTML = recent.map(visit => {
+    let sourceBadge = '';
+    if (visit.isEmail) {
+      sourceBadge = '<span class="source-badge email-badge">📧 Email</span>';
+    } else if (visit.isSocial) {
+      sourceBadge = '<span class="source-badge social-badge">📱 Social</span>';
+    } else if (visit.isSearch) {
+      sourceBadge = '<span class="source-badge search-badge">🔍 Search</span>';
+    }
+    
+    const sourceInfo = visit.sourceName ? `<span class="visit-source">From: ${escapeHtml(visit.sourceName)}</span>` : '';
+    const campaignInfo = visit.utmCampaign ? `<span class="visit-campaign">Campaign: ${escapeHtml(visit.utmCampaign)}</span>` : '';
+    
+    return `
     <div class="analytics-visit-item">
       <div class="visit-info">
         <span class="visit-page">${escapeHtml(visit.page)}</span>
         <span class="visit-time">${formatDateForDisplay(visit.timestamp)}</span>
+        ${sourceBadge}
       </div>
       <div class="visit-meta">
+        ${visit.ip ? `<span class="visit-ip">IP: ${escapeHtml(visit.ip)}</span>` : ''}
+        ${visit.country ? `<span class="visit-country">${escapeHtml(visit.country)}${visit.city ? `, ${escapeHtml(visit.city)}` : ''}</span>` : ''}
+        ${sourceInfo}
+        ${campaignInfo}
         <span class="visit-referrer">${escapeHtml(visit.referrer === 'direct' ? 'Direct' : extractDomain(visit.referrer))}</span>
         <span class="visit-device">${getDeviceInfo(visit.userAgent)}</span>
       </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
 }
 
 // Get device info from user agent

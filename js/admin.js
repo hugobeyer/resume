@@ -9,15 +9,24 @@ const MAX_LOGIN_ATTEMPTS = 5;
 const LOCKOUT_DURATION = 15 * 60 * 1000; // 15 minutes in milliseconds
 const SESSION_DURATION = 8 * 60 * 60 * 1000; // 8 hours
 
-// Hashed credentials (SHA-256 hashes of username and password)
-// These are harder to reverse than plain text passwords
-// Note: For true security, use server-side authentication. This provides basic obfuscation.
-const CREDENTIAL_HASHES = {
-  // Username: 'bugo' (lowercase) -> SHA-256 hash
-  username: '432b2cfa446caf609798e3986fa2ae8be671f052ea4ca7aea3bc674ef7f0bcdf',
-  // Password: '!123Carthug' -> SHA-256 hash  
-  password: '31968e76cfd7c64c4b37e653a244b113a8377046ec35f10dbacb5fdce13b2c75'
-};
+// Obfuscated credential hashes - split and encoded to make reverse engineering harder
+// WARNING: Client-side code cannot be truly hidden. This is obfuscation, not encryption.
+// For production security, use server-side authentication.
+(function() {
+  // Split hash strings into chunks and store as hex numbers
+  const _u1 = ['432b2cfa', '446caf60', '9798e398', '6fa2ae8b', 'e671f052', 'ea4ca7ae', 'a3bc674e', 'f7f0bcdf'];
+  const _p1 = ['31968e76', 'cfd7c64c', '4b37e653', 'a244b113', 'a8377046', 'ec35f10d', 'bacb5fdc', 'e13b2c75'];
+  
+  // Reconstruct hashes at runtime
+  window._authHashes = {
+    u: _u1.join(''),
+    p: _p1.join('')
+  };
+  
+  // Clean up arrays from memory (attempt to make inspection harder)
+  _u1.length = 0;
+  _p1.length = 0;
+})();
 
 // Rate limiting: Check if user is locked out
 function isLockedOut() {
@@ -161,8 +170,9 @@ async function handleLogin(event) {
     const usernameHash = await hashString(username.toLowerCase());
     const passwordHash = await hashString(password);
     
-    // Compare hashes (using timing-safe comparison would be better, but this is acceptable for client-side)
-    if (usernameHash === CREDENTIAL_HASHES.username && passwordHash === CREDENTIAL_HASHES.password) {
+    // Compare hashes (obfuscated credential check)
+    const storedHashes = window._authHashes || {};
+    if (usernameHash === storedHashes.u && passwordHash === storedHashes.p) {
       setAuthenticated(true);
       showAdminContent();
       errorDiv.textContent = '';
