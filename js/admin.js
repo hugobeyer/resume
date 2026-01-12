@@ -15,7 +15,7 @@ const SESSION_DURATION = 8 * 60 * 60 * 1000; // 8 hours
 (function() {
   // Split hash strings into chunks and store as hex numbers
   const _u1 = ['432b2cfa', '446caf60', '9798e398', '6fa2ae8b', 'e671f052', 'ea4ca7ae', 'a3bc674e', 'f7f0bcdf'];
-  const _p1 = ['31968e76', 'cfd7c64c', '4b37e653', 'a244b113', 'a8377046', 'ec35f10d', 'bacb5fdc', 'e13b2c75'];
+  const _p1 = ['91689f1e', '5a28da78', '1e4aaa27', '6c8f6981', '801e1b48', '7c853cea', '9952cf19', 'a487e0f1'];
   
   // Reconstruct hashes at runtime
   window._authHashes = {
