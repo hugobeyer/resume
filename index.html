@@ -5,12 +5,13 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>Hugo Beyer — Technical Artist</title>
+  <title>HugoBeyer — Environment / Tech Artist</title>
 
   <meta name="description"
-    content="Hugo Beyer — Technical Artist focused on procedural systems, tools development, and real-time workflows in Houdini, Unreal Engine, Unity, and Godot." />
+    content="Resume — Hugo Beyer, Technical Artist focused on procedural tools and real-time workflows (Houdini, Unreal, Unity, Godot)." />
 
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/print.css">
 
   <script type="application/ld+json">
@@ -19,6 +20,7 @@
     "@type": "Person",
     "name": "Hugo Beyer",
     "jobTitle": "Technical Artist",
+    "url": "https://www.linkedin.com/in/hugobeyer/",
     "address": {
       "@type": "PostalAddress",
       "addressLocality": "Curitiba",
@@ -26,22 +28,20 @@
     },
     "knowsAbout": [
       "Houdini",
+      "Maya",
       "Unreal Engine",
       "Unity",
       "Godot",
-      "C#",
+      "Procedural tools",
+      "Substance",
       "Python",
-      "VEX",
-      "Procedural Generation",
-      "Pipeline Automation",
-      "Tool Development",
-      "Shader Development"
+      "C#",
+      "VEX"
     ],
     "sameAs": [
       "https://www.linkedin.com/in/hugobeyer/",
       "https://www.artstation.com/hugobeyer",
-      "https://www.youtube.com/@hugobeyer",
-      "https://hugobeyer.github.io/resume/"
+      "https://www.youtube.com/@hugobeyer"
     ]
   }
   </script>
@@ -49,103 +49,146 @@
 
 <body>
 
-  <main>
+  <div class="editor-layout">
 
-    <header>
-      <h1>Hugo Beyer</h1>
-      <p>Technical Artist — Procedural Systems / Tools / Real-time Pipelines</p>
-      <p>Houdini · Unreal Engine · Unity · Godot · C# · Python · VEX</p>
-    </header>
+    <div class="line-number-column" id="lineNumbers"></div>
 
-    <section>
-      <h2>Experience</h2>
+    <div class="content-column">
 
-      <article>
-        <h3>Tech Artist Tools Developer — Series AI Ent.</h3>
-        <p>Feb 2025 — Present | Remote</p>
-        <ul>
-          <li>Developed Unity Editor tools (C#) for environment and level workflows.</li>
-          <li>Built automation systems reducing manual iteration and setup time.</li>
-          <li>Improved DCC ↔ engine pipeline with validation and export tooling.</li>
-          <li>Focused on procedural workflow acceleration and tool usability.</li>
-        </ul>
-      </article>
+      <!-- REMOVED: VEX overlay / glitch FX / decorative noise layers -->
 
-      <article>
-        <h3>Principal Technical Artist — Mythica</h3>
-        <p>Nov 2023 — Sep 2024</p>
-        <ul>
-          <li>Developed procedural generation systems in Unreal Engine.</li>
-          <li>Focused on terrain generation and foliage distribution systems.</li>
-          <li>Worked on AI-assisted procedural content workflows.</li>
-          <li>Supported real-time environment generation pipelines.</li>
-        </ul>
-      </article>
+      <main class="page">
 
-      <article>
-        <h3>Tech Artist — Skrice Studios</h3>
-        <p>Jun 2023 — Jan 2024</p>
-        <ul>
-          <li>Built Houdini procedural tools for layout, instancing, and asset generation.</li>
-          <li>Created export validation systems and naming conventions automation.</li>
-          <li>Supported shader/material pipeline iteration for art direction needs.</li>
-          <li>Improved asset handoff between DCC tools and engine.</li>
-        </ul>
-      </article>
+        <div id="header-placeholder"></div>
 
-      <article>
-        <h3>Senior Environment Texture Artist — Ready at Dawn</h3>
-        <p>Jun 2013 — Aug 2015 | Irvine, CA</p>
-        <ul>
-          <li>High-poly sculpting, UV mapping, baking, and texture production pipelines.</li>
-          <li>PBR material creation and environment texture library development.</li>
-          <li>Maintained texel density, naming standards, and asset consistency.</li>
-          <li>Collaborated with lighting and shader teams for final visual fidelity.</li>
-        </ul>
-      </article>
+        <div class="grid">
 
-    </section>
+          <section>
 
-    <section>
-      <h2>Projects</h2>
+            <h2>Experience</h2>
 
-      <article>
-        <h3>Plexus — GPU Node System (Unity)</h3>
-        <ul>
-          <li>Compute shader-based procedural node graph system.</li>
-          <li>Runtime graph execution for geometry manipulation and generation.</li>
-          <li>Mesh scattering and procedural surface distribution system.</li>
-          <li>Designed for real-time visual programming workflows in Unity.</li>
-        </ul>
-      </article>
+            <article class="item" data-date="2025-02">
+              <div class="row">
+                <div>
+                  <div class="role">Tech Artist Tools Developer | Contract</div>
+                  <div class="subline">
+                    <span class="where">Series AI Ent. | Remote</span>
+                    <span class="when">Feb 2025 — Present</span>
+                  </div>
+                </div>
+              </div>
+              <ul class="bullets">
+                <li>Built Unity (C# Editor) tools for environment and level workflows.</li>
+                <li>Created automation utilities to accelerate iteration and reduce manual steps.</li>
+                <li>Improved DCC ↔ engine pipeline via export templates and validation tools.</li>
+              </ul>
+            </article>
 
-      <article>
-        <h3>Unity / Godot Demos</h3>
-        <ul>
-          <li>Gameplay prototypes with input, camera, physics, and UI systems.</li>
-          <li>Procedural tools for level assembly and environment scattering.</li>
-          <li>Shader and rendering experiments for real-time engines.</li>
-        </ul>
-      </article>
+            <article class="item" data-date="2023-11">
+              <div class="row">
+                <div>
+                  <div class="role">Principal Technical Artist | Contract</div>
+                  <div class="subline">
+                    <span class="where">Mythica</span>
+                    <span class="when">Nov 2023 — Sep 2024</span>
+                  </div>
+                </div>
+              </div>
+              <ul class="bullets">
+                <li>Developed procedural generation systems in Unreal Engine.</li>
+                <li>Focused on terrain and foliage procedural workflows.</li>
+                <li>Supported AI-assisted procedural content pipeline development.</li>
+              </ul>
+            </article>
 
-    </section>
+            <article class="item" data-date="2023-06">
+              <div class="row">
+                <div>
+                  <div class="role">Tech Artist | Contract</div>
+                  <div class="subline">
+                    <span class="where">Skrice Studios</span>
+                    <span class="when">Jun 2023 — Jan 2024</span>
+                  </div>
+                </div>
+              </div>
+              <ul class="bullets">
+                <li>Created Houdini procedural tools for layout, instancing, and asset generation.</li>
+                <li>Built export validation and naming automation systems.</li>
+                <li>Supported shader and material pipeline iteration.</li>
+              </ul>
+            </article>
 
-    <section>
-      <h2>Skills</h2>
-      <ul>
-        <li>Houdini (VEX, SOPs, procedural systems)</li>
-        <li>Unreal Engine (materials, environments, real-time workflows)</li>
-        <li>Unity (C#, Editor tools, compute shaders)</li>
-        <li>Godot (prototyping, gameplay systems)</li>
-        <li>Python, C#</li>
-        <li>Procedural Generation</li>
-        <li>Pipeline Automation</li>
-        <li>Tool Development</li>
-        <li>Shader Development</li>
-      </ul>
-    </section>
+            <article class="item">
+              <div class="row">
+                <div>
+                  <div class="role">Senior Environment Texture Artist | Full-time</div>
+                  <div class="subline">
+                    <span class="where">Ready at Dawn · Irvine, CA</span>
+                    <span class="when">Jun 2013 — Aug 2015</span>
+                  </div>
+                </div>
+              </div>
+              <ul class="bullets">
+                <li>High-poly sculpting, UVs, baking pipelines.</li>
+                <li>PBR material authoring and texture library creation.</li>
+                <li>Texel density, naming standards, and asset consistency.</li>
+                <li>Collaboration with lighting and shader teams.</li>
+              </ul>
+            </article>
 
-  </main>
+            <div class="spacer-row"></div>
+            <div class="rule"></div>
+
+            <h2>Projects</h2>
+
+            <article class="item">
+              <div class="row">
+                <div class="role">Plexus | GPU Node Graph (Unity)</div>
+                <div class="when">Compute Shaders</div>
+              </div>
+              <ul class="bullets">
+                <li>Compute shader-based procedural node graph system.</li>
+                <li>Runtime graph execution for geometry manipulation.</li>
+                <li>Mesh scattering and procedural distribution system.</li>
+              </ul>
+            </article>
+
+            <article class="item">
+              <div class="row">
+                <div class="role">Unity / Godot | Game Demos</div>
+                <div class="when">Prototypes</div>
+              </div>
+              <ul class="bullets">
+                <li>Gameplay systems: input, camera, physics, UI.</li>
+                <li>Procedural tools for level building and scattering.</li>
+                <li>Shader and real-time rendering experiments.</li>
+              </ul>
+            </article>
+
+          </section>
+
+          <div id="sidebar-placeholder"></div>
+
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+  <script src="js/components.js"></script>
+  <script src="js/color-utils.js"></script>
+  <script src="js/theme-data.js"></script>
+  <script src="js/theme-generator.js"></script>
+  <script src="js/theme-manager.js"></script>
+
+  <!-- REMOVED: glitch-effects.js (visual noise) -->
+  <!-- REMOVED: vex-console.js (decorative only) -->
+
+  <script src="js/settings.js"></script>
+  <script src="js/analytics.js"></script>
+  <script src="js/app.js"></script>
 
 </body>
+
 </html>
