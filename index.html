@@ -5,14 +5,82 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>HugoBeyer — Environment / Tech Artist</title>
+  <title>Hugo Beyer — Environment / Tech Artist</title>
 
   <meta name="description"
     content="Resume — Hugo Beyer, Technical Artist focused on procedural tools and real-time workflows (Houdini, Unreal, Unity, Godot)." />
 
   <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/print.css">
+
+  <!-- fixed theme -->
+  <style>
+    :root {
+      --bg: #0f1115;
+      --panel: #151922;
+      --text: #e6e6e6;
+      --muted: #a0a7b3;
+      --line: #2a2f3a;
+      --accent: #7aa2f7;
+      --max-width: 1100px;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
+
+    .editor-layout {
+      display: flex;
+      justify-content: center;
+    }
+
+    .content-column {
+      width: 100%;
+      max-width: var(--max-width);
+      padding: 40px 24px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 40px;
+    }
+
+    h2 {
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+    }
+
+    .item {
+      margin-bottom: 24px;
+    }
+
+    .role {
+      font-weight: 600;
+    }
+
+    .subline {
+      color: var(--muted);
+      font-size: 14px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .bullets {
+      margin: 10px 0 0 18px;
+      color: var(--text);
+    }
+
+    .rule {
+      height: 1px;
+      background: var(--line);
+      margin: 32px 0;
+    }
+  </style>
 
   <script type="application/ld+json">
   {
@@ -49,119 +117,79 @@
 
 <body>
 
-  <div class="editor-layout">
+  <main class="content-column">
 
-    <div class="line-number-column" id="lineNumbers"></div>
+    <div id="header-placeholder"></div>
 
-    <div class="content-column">
+    <div class="grid">
 
-      <!-- REMOVED: VEX overlay / glitch FX / decorative noise layers -->
+      <section>
 
-      <main class="page">
+        <h2>Experience</h2>
 
-        <div id="header-placeholder"></div>
+        <article class="item" data-date="2025-02">
+          <div class="role">Senior Tech Artist | Contract</div>
+          <div class="subline">
+            <span>Series AI Ent. | Remote</span>
+            <span>Feb 2025 — Present</span>
+          </div>
+          <ul class="bullets">
+            <li>Built Unity (C# Editor) tools for environment and level workflows.</li>
+            <li>Created automation utilities to accelerate iteration.</li>
+            <li>Improved DCC ↔ engine pipeline via export validation tools.</li>
+          </ul>
+        </article>
 
-        <div class="grid">
+        <article class="item" data-date="2023-11">
+          <div class="role">Principal Technical Artist | Contract</div>
+          <div class="subline">
+            <span>Mythica</span>
+            <span>Nov 2023 — Sep 2024</span>
+          </div>
+          <ul class="bullets">
+            <li>Developed procedural generation systems in Unreal Engine.</li>
+            <li>Terrain and foliage workflow design.</li>
+            <li>Supported procedural content pipeline development.</li>
+          </ul>
+        </article>
 
-          <section>
+        <article class="item" data-date="2023-06">
+          <div class="role">Tech Artist | Contract</div>
+          <div class="subline">
+            <span>Skrice Studios</span>
+            <span>Jun 2023 — Jan 2024</span>
+          </div>
+          <ul class="bullets">
+            <li>Houdini procedural tools for layout and asset generation.</li>
+            <li>Export validation and naming automation systems.</li>
+            <li>Shader and material pipeline support.</li>
+          </ul>
+        </article>
 
-            <h2>Experience</h2>
+        <article class="item">
+          <div class="role">Senior Environment Texture Artist | Full-time</div>
+          <div class="subline">
+            <span>Ready at Dawn · Irvine, CA</span>
+            <span>Jun 2013 — Aug 2015</span>
+          </div>
+          <ul class="bullets">
+            <li>High-poly sculpting, UVs, baking pipelines.</li>
+            <li>PBR material authoring and texture systems.</li>
+            <li>Asset consistency and production standards.</li>
+          </ul>
+        </article>
 
-            <article class="item" data-date="2025-02">
-              <div class="row">
-                <div>
-                  <div class="role">Senior Tech Artist | Contract</div>
-                  <div class="subline">
-                    <span class="where">Series AI Ent. | Remote</span>
-                    <span class="when">Feb 2025 — Present</span>
-                  </div>
-                </div>
-              </div>
-              <ul class="bullets">
-                <li>Built Unity (C# Editor) tools for environment and level workflows.</li>
-                <li>Created automation utilities to accelerate iteration and reduce manual steps.</li>
-                <li>Improved DCC ↔ engine pipeline via export templates and validation tools.</li>
-              </ul>
-            </article>
+        <div class="rule"></div>
 
-            <article class="item" data-date="2023-11">
-              <div class="row">
-                <div>
-                  <div class="role">Principal Technical Artist | Contract</div>
-                  <div class="subline">
-                    <span class="where">Mythica</span>
-                    <span class="when">Nov 2023 — Sep 2024</span>
-                  </div>
-                </div>
-              </div>
-              <ul class="bullets">
-                <li>Developed procedural generation systems in Unreal Engine.</li>
-                <li>Focused on terrain and foliage procedural workflows.</li>
-                <li>Supported AI-assisted procedural content pipeline development.</li>
-              </ul>
-            </article>
+      </section>
 
-            <article class="item" data-date="2023-06">
-              <div class="row">
-                <div>
-                  <div class="role">Tech Artist | Contract</div>
-                  <div class="subline">
-                    <span class="where">Skrice Studios</span>
-                    <span class="when">Jun 2023 — Jan 2024</span>
-                  </div>
-                </div>
-              </div>
-              <ul class="bullets">
-                <li>Created Houdini procedural tools for layout, instancing, and asset generation.</li>
-                <li>Built export validation and naming automation systems.</li>
-                <li>Supported shader and material pipeline iteration.</li>
-              </ul>
-            </article>
-
-            <article class="item">
-              <div class="row">
-                <div>
-                  <div class="role">Senior Environment Texture Artist | Full-time</div>
-                  <div class="subline">
-                    <span class="where">Ready at Dawn · Irvine, CA</span>
-                    <span class="when">Jun 2013 — Aug 2015</span>
-                  </div>
-                </div>
-              </div>
-              <ul class="bullets">
-                <li>High-poly sculpting, UVs, baking pipelines.</li>
-                <li>PBR material authoring and texture library creation.</li>
-                <li>Texel density, naming standards, and asset consistency.</li>
-                <li>Collaboration with lighting and shader teams.</li>
-              </ul>
-            </article>
-
-            <div class="spacer-row"></div>
-            <div class="rule"></div>
-
-
-          </section>
-
-          <div id="sidebar-placeholder"></div>
-
-        </div>
-
-      </main>
+      <aside id="sidebar-placeholder"></aside>
 
     </div>
-  </div>
+
+  </main>
 
   <script src="js/components.js"></script>
-  <script src="js/color-utils.js"></script>
-  <script src="js/theme-data.js"></script>
-  <script src="js/theme-generator.js"></script>
-  <script src="js/theme-manager.js"></script>
-
-  <!-- REMOVED: glitch-effects.js (visual noise) -->
-  <!-- REMOVED: vex-console.js (decorative only) -->
-
-  <script src="js/settings.js"></script>
-  <script src="js/analytics.js"></script>
   <script src="js/app.js"></script>
 
 </body>
