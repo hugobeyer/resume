@@ -1,265 +1,714 @@
 <!doctype html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <title>Hugo Beyer — Environment / Tech Artist</title>
-
+  <title>Hugo Beyer — Senior Technical / Environment Artist</title>
   <meta name="description"
-    content="Resume — Hugo Beyer, Technical Artist focused on procedural tools and real-time workflows (Houdini, Unreal, Unity, Godot)." />
-
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="css/print.css">
-
-  <!-- fixed theme -->
-  <style>
-    :root {
-      --bg: #0f1115;
-      --panel: #151922;
-      --text: #e6e6e6;
-      --muted: #a0a7b3;
-      --line: #2a2f3a;
-      --accent: #7aa2f7;
-      --max-width: 1100px;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-    }
-
-    .editor-layout {
-      display: flex;
-      justify-content: center;
-    }
-
-    .content-column {
-      width: 100%;
-      max-width: var(--max-width);
-      padding: 40px 24px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 40px;
-    }
-
-    h2 {
-      border-bottom: 1px solid var(--line);
-      padding-bottom: 8px;
-      margin-bottom: 20px;
-    }
-
-    .item {
-      margin-bottom: 24px;
-    }
-
-    .role {
-      font-weight: 600;
-    }
-
-    .subline {
-      color: var(--muted);
-      font-size: 14px;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .bullets {
-      margin: 10px 0 0 18px;
-      color: var(--text);
-    }
-
-    .rule {
-      height: 1px;
-      background: var(--line);
-      margin: 32px 0;
-    }
-  </style>
+    content="Senior Technical / Environment Artist — 20+ years, 15+ shipped titles. Procedural pipelines in Houdini + Substance, end-to-end for Unreal and Unity." />
+  <meta name="author" content="Hugo Beyer" />
+  <meta name="keywords" content="Technical Artist, Environment Artist, Senior Technical Artist, Houdini, VEX, Python, Unreal Engine, Unity, Substance Designer, Substance Painter, Procedural pipelines, HDA, Real-time rendering, PBR, Game development, Level art" />
 
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Person",
     "name": "Hugo Beyer",
-    "jobTitle": "Technical Artist",
-    "url": "https://www.linkedin.com/in/hugobeyer/",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Curitiba",
-      "addressCountry": "BR"
-    },
-    "knowsAbout": [
-      "Houdini",
-      "Maya",
-      "Unreal Engine",
-      "Unity",
-      "Godot",
-      "Procedural tools",
-      "Substance",
-      "Python",
-      "C#",
-      "VEX"
-    ],
+    "jobTitle": "Senior Technical / Environment Artist",
+    "url": "https://hugobeyer.github.io/resume/",
+    "email": "mailto:hugobeyer@gmail.com",
+    "address": { "@type": "PostalAddress", "addressLocality": "Curitiba", "addressCountry": "BR" },
+    "knowsAbout": ["Houdini", "VEX", "Python", "Unreal Engine", "Unity", "Substance Designer", "Substance Painter", "Procedural pipelines", "Environment art", "Real-time rendering", "HDA", "Houdini Engine", "PBR", "C#", "Godot", "GLSL", "HLSL", "OpenCL"],
     "sameAs": [
       "https://www.linkedin.com/in/hugobeyer/",
       "https://www.artstation.com/hugobeyer",
-      "https://www.youtube.com/@hugobeyer"
+      "https://www.youtube.com/@hugobeyer",
+      "https://hugobeyer.gumroad.com/"
     ]
   }
   </script>
+
+  <style>
+    :root {
+      --bg: #0b0d12;
+      --panel: #121620;
+      --panel-2: #1a1f2c;
+      --text: #e8eaed;
+      --muted: #8b93a3;
+      --soft: #c7cdd8;
+      --line: #252b38;
+      --accent: #7aa2f7;
+      --accent-dim: #4a6ba8;
+      --warn: #ffb86b;
+      --ok: #5dd3a6;
+      --max-w: 1080px;
+      --mono: ui-monospace, SFMono-Regular, "JetBrains Mono", Menlo, Consolas, monospace;
+      --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 14.5px;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    a { color: var(--accent); text-decoration: none; border-bottom: 1px dotted var(--accent-dim); }
+    a:hover { color: #fff; border-bottom-color: var(--accent); }
+
+    main {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 48px 32px 80px;
+    }
+
+    /* Header */
+    header.top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 20px;
+    }
+    header.top h1 {
+      font-family: var(--mono);
+      font-size: 30px;
+      font-weight: 600;
+      margin: 0 0 6px;
+      letter-spacing: -0.3px;
+    }
+    header.top h1 .dot { color: var(--accent); }
+    header.top .role-line {
+      color: var(--soft);
+      font-size: 15px;
+      margin: 0 0 6px;
+    }
+    header.top .role-line .pill {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 1px 8px;
+      border: 1px solid var(--accent-dim);
+      color: var(--accent);
+      font-size: 11.5px;
+      font-family: var(--mono);
+      border-radius: 2px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      vertical-align: middle;
+    }
+    header.top .tools {
+      color: var(--muted);
+      font-size: 12.5px;
+      font-family: var(--mono);
+      margin: 0 0 6px;
+    }
+    header.top .stats {
+      color: var(--soft);
+      font-size: 13px;
+      font-family: var(--mono);
+      margin: 0;
+    }
+    header.top .stats .n { color: var(--accent); font-weight: 600; }
+    header.top .right {
+      text-align: right;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    header.top .right .location { color: var(--soft); margin-bottom: 4px; }
+    header.top .right a { display: block; margin: 2px 0; font-size: 12.5px; }
+
+    /* Summary */
+    .summary {
+      margin: 28px 0 8px;
+      padding: 18px 20px;
+      background: var(--panel);
+      border-left: 3px solid var(--accent);
+      border-radius: 2px;
+      color: var(--soft);
+      font-size: 14.5px;
+    }
+    .summary strong { color: var(--text); font-weight: 600; }
+    .looking {
+      margin: 10px 0 0;
+      padding-top: 10px;
+      border-top: 1px dashed var(--line);
+      color: var(--text);
+      font-size: 13.5px;
+    }
+    .looking .label {
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--ok);
+      margin-right: 6px;
+    }
+
+    /* Layout */
+    .grid {
+      display: grid;
+      grid-template-columns: 2.1fr 1fr;
+      gap: 44px;
+      margin-top: 32px;
+    }
+    @media (max-width: 820px) {
+      .grid { grid-template-columns: 1fr; gap: 28px; }
+      header.top { flex-direction: column; align-items: flex-start; }
+      header.top .right { text-align: left; }
+    }
+
+    /* Section titles */
+    h2 {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--accent);
+      margin: 0 0 16px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    /* Experience items */
+    .item { margin-bottom: 26px; }
+    .item .role {
+      font-weight: 600;
+      font-size: 15px;
+      color: var(--text);
+      margin: 0;
+    }
+    .item .company { color: var(--accent); font-weight: 500; }
+    .item .subline {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12.5px;
+      margin: 3px 0 4px;
+      font-family: var(--mono);
+    }
+    .item .context {
+      color: var(--soft);
+      font-size: 13px;
+      font-style: italic;
+      margin: 0 0 8px;
+    }
+    .item ul.bullets {
+      margin: 6px 0 0;
+      padding-left: 18px;
+      color: var(--soft);
+    }
+    .item ul.bullets li { margin-bottom: 4px; }
+
+    /* Contract sub-clients */
+    .client-group {
+      margin: 10px 0 26px;
+      padding-left: 14px;
+      border-left: 1px solid var(--line);
+    }
+    .client-group .client { margin-bottom: 16px; }
+    .client-group .client-name {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 14px;
+    }
+    .client-group .client-name .when {
+      color: var(--muted);
+      font-weight: 400;
+      font-family: var(--mono);
+      font-size: 12px;
+      margin-left: 6px;
+    }
+    .client-group .client .project {
+      color: var(--accent);
+      font-style: italic;
+      font-size: 13.5px;
+    }
+    .client-group ul {
+      margin: 4px 0 0;
+      padding-left: 18px;
+      color: var(--soft);
+      font-size: 13.5px;
+    }
+    .client-group ul li { margin-bottom: 3px; }
+
+    /* Sidebar cards */
+    aside .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      padding: 16px 18px;
+      margin-bottom: 18px;
+    }
+    aside .card.featured {
+      border-color: var(--accent-dim);
+      background: linear-gradient(180deg, #171d2b 0%, var(--panel) 100%);
+    }
+    aside h3 {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.8px;
+      color: var(--accent);
+      margin: 0 0 10px;
+    }
+
+    aside .group {
+      margin-bottom: 10px;
+    }
+    aside .group:last-child { margin-bottom: 0; }
+    aside .group-label {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    aside .chips { display: flex; flex-wrap: wrap; gap: 5px; }
+    aside .chip {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--soft);
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 2px;
+      padding: 3px 8px;
+    }
+
+    aside .titles {
+      font-size: 13px;
+      color: var(--soft);
+      line-height: 1.75;
+    }
+    aside .titles .t { color: var(--text); }
+    aside .titles .dot { color: var(--muted); margin: 0 4px; }
+
+    aside .stat {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 4px 0;
+      font-size: 13px;
+      color: var(--soft);
+      border-bottom: 1px dashed var(--line);
+    }
+    aside .stat:last-child { border-bottom: 0; }
+    aside .stat .v { color: var(--accent); font-family: var(--mono); font-size: 12.5px; }
+    aside .stat a { border-bottom: 0; }
+
+    aside ul.simple {
+      margin: 0; padding-left: 16px; color: var(--soft); font-size: 13px;
+    }
+    aside ul.simple li { margin-bottom: 3px; }
+
+    /* Footer */
+    footer.note {
+      margin-top: 40px;
+      font-size: 11.5px;
+      color: var(--muted);
+      font-family: var(--mono);
+      text-align: center;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    /* Print */
+    @media print {
+      :root { --bg: #fff; --panel: #fff; --panel-2: #f5f5f5; --text: #111; --muted: #555; --soft: #222; --line: #ddd; --accent: #1e4a9b; --accent-dim: #6c8bc1; --ok: #1a7a4a; }
+      body { font-size: 10.5pt; }
+      main { padding: 18px; max-width: none; }
+      a { color: #1e4a9b !important; border-bottom: 0 !important; }
+      .summary { background: #fafafa; }
+      aside .card, aside .card.featured { background: #fafafa; }
+      header.top h1 { font-size: 22pt; }
+      .item { page-break-inside: avoid; margin-bottom: 14px; }
+      footer.note { display: none; }
+    }
+  </style>
 </head>
 
 <body>
+<main>
 
-  <main class="content-column">
-
-    <div id="header-placeholder"></div>
-
-    <div class="grid">
-
-<section>
-
-  <h2>Experience</h2>
-
-  <article class="item"
-    data-role="Contract Technical Artist"
-    data-company="Survios, Series AI, Mythica, Okio and others"
-    data-type="Contract"
-    data-location="Remote"
-    data-start="2019-12"
-    data-end="Present">
-
-    <div class="role">Contract Technical Artist</div>
-
-    <div class="subline">
-      <span>Survios, Series AI, Mythica, Okio and others · Contract</span>
-      <span>Dec 2019 — Present · 6 yrs 5 mos</span>
+  <header class="top">
+    <div class="left">
+      <h1>Hugo<span class="dot">.</span>Beyer</h1>
+      <p class="role-line">Senior Technical / Environment Artist <span class="pill">Hybrid tech + env</span></p>
+      <p class="tools">Houdini · VEX · Python · Unreal · Unity · Substance · real-time pipelines</p>
+      <p class="stats"><span class="n">21</span> years &nbsp;·&nbsp; <span class="n">15+</span> shipped titles &nbsp;·&nbsp; <span class="n">9</span> studios</p>
     </div>
-
-    <div class="meta">Remote</div>
-
-    <ul class="bullets">
-      <li>Develop tools, environments and textures for Unreal, Unity and custom engines.</li>
-      <li>Focus on productivity tools, pipeline unblockers, bug fixing.</li>
-      <li>Procedural asset creation and workflow automation.</li>
-    </ul>
-
-  </article>
-
-  <article class="item"
-    data-role="Principal Environment Artist"
-    data-company="Microsoft"
-    data-location="Redmond, Washington"
-    data-start="2017-08"
-    data-end="2019-12">
-
-    <div class="role">Principal Environment Artist</div>
-
-    <div class="subline">
-      <span>Microsoft</span>
-      <span>Aug 2017 — Dec 2019 · 2 yrs 5 mos</span>
+    <div class="right">
+      <div class="location">Curitiba, Brazil &nbsp;·&nbsp; Open to remote</div>
+      <a href="mailto:hugobeyer@gmail.com">hugobeyer@gmail.com</a>
+      <a href="https://www.linkedin.com/in/hugobeyer/" target="_blank" rel="noopener">linkedin.com/in/hugobeyer</a>
+      <a href="https://www.artstation.com/hugobeyer" target="_blank" rel="noopener">artstation.com/hugobeyer</a>
+      <a href="https://www.youtube.com/@hugobeyer" target="_blank" rel="noopener">youtube.com/@hugobeyer</a>
+      <a href="https://hugobeyer.gumroad.com/" target="_blank" rel="noopener">hugobeyer.gumroad.com</a>
     </div>
+  </header>
 
-    <div class="meta">Redmond, Washington</div>
-
-    <ul class="bullets">
-      <li>Environment creation and set production for AltspaceVR.</li>
-      <li>Mixed reality demos and presentations for VR/AR.</li>
-    </ul>
-
-  </article>
-
-  <article class="item"
-    data-role="Senior Environment Artist"
-    data-company="Sparky Pants Studios"
-    data-location="Baltimore, Maryland Area"
-    data-start="2015-11"
-    data-end="2017-05">
-
-    <div class="role">Senior Environment Artist</div>
-
-    <div class="subline">
-      <span>Sparky Pants Studios</span>
-      <span>Nov 2015 — May 2017 · 1 yr 7 mos</span>
+  <section class="summary">
+    <strong>21 years, 15+ shipped titles</strong> across AAA console, VR/MR, and mobile. Senior Technical Artist specializing in procedural pipelines (Houdini + Substance) with deep environment-art craft — I ship the environments <em>and</em> the procedural tech underneath them, end-to-end in Unreal and Unity. One hire covers two roles.
+    <div class="looking">
+      <span class="label">Open to</span>
+      Senior IC roles at mid-size indie or remote-first studios — procedural-heavy environment pipelines, teams with existing senior tech art leadership. Full-time, long contract, or fractional.
     </div>
+  </section>
 
-    <div class="meta">Baltimore, Maryland Area</div>
+  <div class="grid">
 
-    <ul class="bullets">
-      <li>Level environments and texture production for Dropzone.</li>
-      <li>Pipeline organization and tooling support.</li>
-      <li>Maya, Houdini, Substance Designer workflow integration.</li>
-    </ul>
+    <!-- MAIN COLUMN -->
+    <section>
 
-  </article>
+      <h2>Experience</h2>
 
-  <article class="item"
-    data-role="Senior Environment Texture Artist"
-    data-company="Ready At Dawn Studios"
-    data-location="Irvine, CA"
-    data-start="2013-06"
-    data-end="2015-08">
+      <!-- CONTRACT -->
+      <article class="item"
+        data-role="Senior Technical Artist"
+        data-company="Contract / Consulting"
+        data-type="Contract"
+        data-location="Remote"
+        data-start="2019-09"
+        data-end="Present">
+        <div class="role">Senior Technical Artist <span class="company">— Contract / Consulting</span></div>
+        <div class="subline">
+          <span>Various clients · Remote</span>
+          <span>Sep 2019 — Present</span>
+        </div>
+        <div class="context">Hybrid tech/env consulting. Clients include Series Entertainment (Series AI), Mythica, Skrice Studios, Survios, and Wildlife Studios.</div>
 
-    <div class="role">Senior Environment Texture Artist</div>
+        <div class="client-group">
 
-    <div class="subline">
-      <span>Ready At Dawn Studios</span>
-      <span>Jun 2013 — Aug 2015 · 2 yrs 3 mos</span>
-    </div>
+          <div class="client">
+            <div class="client-name">Series Entertainment <span class="project">(Series AI)</span><span class="when">2024 — Sep 2025</span></div>
+            <ul>
+              <li>Built Unity ↔ Houdini round-tripping pipeline via JSON schema for environment linking.</li>
+              <li>Designed Unity scattering tools and Houdini HDAs for designer-side gameplay authoring: pathing, enemy / item / boss placement.</li>
+              <li>Prototyped procedural environment generation using Voronoi / Worley cell structures, metaballs, and marching cubes for auto-generated playable spaces.</li>
+              <li>Owned tool design for the art director's authoring workflow.</li>
+            </ul>
+          </div>
 
-    <div class="meta">Irvine, CA</div>
+          <div class="client">
+            <div class="client-name">Mythica <span class="when">2023 · 9 months</span></div>
+            <ul>
+              <li>Established Houdini → Unreal procedural pipeline from scratch for the team.</li>
+              <li>Built the first production-ready biome end-to-end; this vertical slice became the internal benchmark and onboarding reference for downstream environment work.</li>
+              <li>Demonstrated full HDA workflow patterns the team could replicate for additional biomes.</li>
+            </ul>
+          </div>
 
-    <ul class="bullets">
-      <li>Material creation and environment assets for PS4 title.</li>
-      <li>Custom engine pipeline support and texture standards.</li>
-    </ul>
+          <div class="client">
+            <div class="client-name">Skrice Studios <span class="project">— Heroes of Mavia (mobile)</span><span class="when">2023</span></div>
+            <ul>
+              <li>Owned Houdini-driven environment optimization for mobile release: foliage systems, building LOD generation, per-platform asset variants.</li>
+              <li>Built automated baking pipelines for shipped production content.</li>
+            </ul>
+          </div>
 
-    <div class="media">
-      <a href="#" target="_blank">The Order: 1886 – Trailer (E3 2013)</a>
-    </div>
+          <div class="client">
+            <div class="client-name">Survios <span class="project">— Alien: Rogue Incursion (PSVR2 / PC)</span><span class="when">2022 — 2023</span></div>
+            <ul>
+              <li>Built Houdini-to-Unreal toolset for VR environment production: procedural pipes, cable / wire runs, web / organic surfaces, and related propagation systems.</li>
+              <li>Delivered HDAs with Unreal-side integration and custom parameter UIs for the environment team.</li>
+            </ul>
+          </div>
 
-  </article>
+          <div class="client">
+            <div class="client-name">Wildlife Studios <span class="when">Sep 2019 — Sep 2020</span></div>
+            <ul>
+              <li>Authored Substance Painter auto-shading filter producing PBR and hand-painted output from raw mesh input, intended for cross-title use.</li>
+              <li>Built environment pipeline for <em>Zooba</em>; tooling support for <em>Tennis Clash</em>.</li>
+              <li>Prototyped unreleased arcade dungeon project.</li>
+            </ul>
+          </div>
 
-  <article class="item"
-    data-role="Senior Environment Artist"
-    data-company="Terminal Reality"
-    data-location="Dallas–Fort Worth Metroplex"
-    data-start="2010-02"
-    data-end="2011-10">
+        </div>
+      </article>
 
-    <div class="role">Senior Environment Artist</div>
+      <!-- MICROSOFT -->
+      <article class="item"
+        data-role="Principal Environment Artist"
+        data-company="Microsoft"
+        data-location="Redmond, WA"
+        data-start="2017-08"
+        data-end="2019-12">
+        <div class="role">Principal Environment Artist <span class="company">— Microsoft</span></div>
+        <div class="subline">
+          <span>AltspaceVR + Mixed Reality initiatives · Redmond, WA</span>
+          <span>Aug 2017 — Dec 2019</span>
+        </div>
+        <ul class="bullets">
+          <li>Owned environment creation for high-stakes, tight-turnaround shipped experiences: Microsoft keynote presentations, the Reggie Watts live VR show, Cirque du Soleil MR demos, MR Home environment turnarounds, and internal MR showcases.</li>
+          <li>Built environment and world content for <strong>IVAS</strong> (Integrated Visual Augmentation System) and HoloLens mixed-reality programs for the US Army.</li>
+          <li>Delivered shipping-quality VR/MR environments across concurrent keynote, event, and prototype tracks under demo-cycle pressure.</li>
+        </ul>
+      </article>
 
-    <div class="subline">
-      <span>Terminal Reality</span>
-      <span>Feb 2010 — Oct 2011 · 1 yr 9 mos</span>
-    </div>
+      <!-- SPARKY PANTS -->
+      <article class="item"
+        data-role="Senior Environment Artist"
+        data-company="Sparky Pants Studios"
+        data-location="Baltimore, MD"
+        data-start="2015-11"
+        data-end="2017-05">
+        <div class="role">Senior Environment Artist <span class="company">— Sparky Pants Studios</span></div>
+        <div class="subline">
+          <span><em>Dropzone</em> (PC MOBA) · Baltimore, MD</span>
+          <span>Nov 2015 — May 2017</span>
+        </div>
+        <ul class="bullets">
+          <li>Shipped level environments and texture production.</li>
+          <li>Integrated Maya / Houdini / Substance Designer into the studio pipeline; tooling support across the art team.</li>
+        </ul>
+      </article>
 
-    <div class="meta">Dallas–Fort Worth Metroplex</div>
+      <!-- READY AT DAWN -->
+      <article class="item"
+        data-role="Senior Environment Texture Artist"
+        data-company="Ready At Dawn Studios"
+        data-location="Irvine, CA"
+        data-start="2013-06"
+        data-end="2015-08">
+        <div class="role">Senior Environment Texture Artist <span class="company">— Ready At Dawn Studios</span></div>
+        <div class="subline">
+          <span><em>The Order: 1886</em> (PS4) · Irvine, CA</span>
+          <span>Jun 2013 — Aug 2015</span>
+        </div>
+        <ul class="bullets">
+          <li>Authored materials, surface blending, color composition, and detail modeling / signage across East India House and Mayfair environments (interiors, streets, rooftops, alleys, plaza).</li>
+          <li>Produced tileable surface materials — cobblestone, leather, leaves, wood, soil, rocks, grass / duff — within Ready At Dawn's custom material authoring pipeline.</li>
+          <li>Contributed to pipeline refinements through collaboration with programmers and tech artists on the studio's custom engine.</li>
+          <li>Owned outsource integration: reviewed, finished, and fixed vendor-delivered art to shipping quality where nobody else would pick it up.</li>
+        </ul>
+      </article>
 
-    <ul class="bullets">
-      <li>Environment and prop development for Kinect Star Wars.</li>
-      <li>Texturing and asset production support.</li>
-    </ul>
+      <!-- AIRTIGHT -->
+      <article class="item"
+        data-role="Senior Environment Artist"
+        data-company="Airtight Games"
+        data-location="Redmond, WA"
+        data-start="2012-09"
+        data-end="2013-05">
+        <div class="role">Senior Environment Artist <span class="company">— Airtight Games</span></div>
+        <div class="subline">
+          <span><em>Murdered: Soul Suspect</em> · Redmond, WA</span>
+          <span>Sep 2012 — May 2013</span>
+        </div>
+        <ul class="bullets">
+          <li>Environment and asset production for shipped title.</li>
+        </ul>
+      </article>
 
-  </article>
+      <!-- NERVE -->
+      <article class="item"
+        data-role="Environment Artist"
+        data-company="Nerve Software"
+        data-location="Dallas–Fort Worth, TX"
+        data-start="2011-10"
+        data-end="2012-08">
+        <div class="role">Environment Artist <span class="company">— Nerve Software</span></div>
+        <div class="subline">
+          <span><em>Call of Duty: Black Ops II</em> (Xbox 360) · Dallas–Fort Worth, TX</span>
+          <span>Oct 2011 — Aug 2012</span>
+        </div>
+        <ul class="bullets">
+          <li>Environment and asset production for shipped AAA title.</li>
+        </ul>
+      </article>
 
-</section>
+      <!-- TERMINAL REALITY -->
+      <article class="item"
+        data-role="Senior Environment Artist"
+        data-company="Terminal Reality"
+        data-location="Dallas–Fort Worth, TX"
+        data-start="2010-02"
+        data-end="2011-10">
+        <div class="role">Senior Environment Artist <span class="company">— Terminal Reality</span></div>
+        <div class="subline">
+          <span><em>Kinect Star Wars</em> (Xbox 360) · Dallas–Fort Worth, TX</span>
+          <span>Feb 2010 — Oct 2011</span>
+        </div>
+        <ul class="bullets">
+          <li>Environment art, prop development, and texturing for shipped launch-window title.</li>
+        </ul>
+      </article>
 
-      <aside id="sidebar-placeholder"></aside>
+      <!-- LIQUID DEV -->
+      <article class="item"
+        data-role="Contract Artist"
+        data-company="Liquid Development + direct freelance"
+        data-location="Remote, Curitiba, Brazil"
+        data-start="2007"
+        data-end="2009">
+        <div class="role">Contract Artist <span class="company">— Liquid Development + direct freelance</span></div>
+        <div class="subline">
+          <span>Remote from Curitiba, Brazil</span>
+          <span>2007 — 2009</span>
+        </div>
+        <ul class="bullets">
+          <li>Outsourced environment / prop art for <em>Rock Band 3</em>, <em>The Beatles: Rock Band</em> (Harmonix), <em>Borderlands</em> (Gearbox), <em>Damnation</em> (Blue Omega / Codemasters), and additional AAA projects.</li>
+          <li>Direct freelance contribution: <em>Anno 1404</em> (Related Designs / Ubisoft).</li>
+          <li>Early remote practice — Brazil-based, US and European clients.</li>
+        </ul>
+      </article>
 
-    </div>
+      <!-- TECHFRONT -->
+      <article class="item"
+        data-role="Artist"
+        data-company="Techfront"
+        data-location="Curitiba, Brazil"
+        data-start="2005"
+        data-end="2007">
+        <div class="role">Artist <span class="company">— Techfront</span></div>
+        <div class="subline">
+          <span>First studio role · Curitiba, Brazil</span>
+          <span>2005 — 2007</span>
+        </div>
+        <ul class="bullets">
+          <li>Art production for <em>Burger Island</em> (Nintendo DS / Flash) and <em>Owner of the Crown</em>.</li>
+        </ul>
+      </article>
 
-  </main>
+      <h2 style="margin-top: 32px;">Education</h2>
+      <div class="item">
+        <div class="role">Bachelor's in Industrial Graphic Design <span class="company">— Universidade Positivo</span></div>
+        <div class="subline"><span>Curitiba, Brazil</span></div>
+      </div>
 
-  <script src="js/components.js"></script>
-  <script src="js/app.js"></script>
+    </section>
+
+    <!-- SIDEBAR -->
+    <aside>
+
+      <div class="card featured">
+        <h3>Featured Work</h3>
+        <div style="font-size: 13.5px; color: var(--soft);">
+          <div><strong style="color: var(--text)">House Generator — procedural Unreal</strong></div>
+          <div style="color: var(--muted); margin: 4px 0 8px;">Houdini HDA + Unreal integration with custom parameter editor. 120 houses generated in 30 seconds by level designers, not tech artists.</div>
+          <a href="https://www.artstation.com/hugobeyer" target="_blank" rel="noopener">View on ArtStation →</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Focus</h3>
+
+        <div class="group">
+          <div class="group-label">Tools</div>
+          <div class="chips">
+            <span class="chip">Houdini</span>
+            <span class="chip">Substance Designer</span>
+            <span class="chip">Substance Painter</span>
+            <span class="chip">Maya</span>
+            <span class="chip">ZBrush</span>
+          </div>
+        </div>
+
+        <div class="group">
+          <div class="group-label">Engines</div>
+          <div class="chips">
+            <span class="chip">Unreal</span>
+            <span class="chip">Unity</span>
+            <span class="chip">Godot</span>
+          </div>
+        </div>
+
+        <div class="group">
+          <div class="group-label">Code</div>
+          <div class="chips">
+            <span class="chip">VEX</span>
+            <span class="chip">Python</span>
+            <span class="chip">C#</span>
+            <span class="chip">GLSL / HLSL</span>
+            <span class="chip">OpenCL</span>
+            <span class="chip">Git</span>
+          </div>
+        </div>
+
+        <div class="group">
+          <div class="group-label">Practice</div>
+          <div class="chips">
+            <span class="chip">Procedural pipelines</span>
+            <span class="chip">HDA authoring</span>
+            <span class="chip">Houdini Engine</span>
+            <span class="chip">PBR + stylized</span>
+            <span class="chip">Real-time optimization</span>
+            <span class="chip">AI tooling</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Selected Shipped Titles</h3>
+        <div class="titles">
+          <span class="t">The Order: 1886</span> <span class="dot">·</span>
+          <span class="t">Alien: Rogue Incursion</span> <span class="dot">·</span>
+          <span class="t">Heroes of Mavia</span> <span class="dot">·</span>
+          <span class="t">Call of Duty: Black Ops II</span> <span class="dot">·</span>
+          <span class="t">Murdered: Soul Suspect</span> <span class="dot">·</span>
+          <span class="t">Kinect Star Wars</span> <span class="dot">·</span>
+          <span class="t">Dropzone</span> <span class="dot">·</span>
+          <span class="t">AltspaceVR</span> <span class="dot">·</span>
+          <span class="t">Tennis Clash</span> <span class="dot">·</span>
+          <span class="t">Zooba</span> <span class="dot">·</span>
+          <span class="t">Rock Band 3</span> <span class="dot">·</span>
+          <span class="t">The Beatles: Rock Band</span> <span class="dot">·</span>
+          <span class="t">Borderlands</span> <span class="dot">·</span>
+          <span class="t">Anno 1404</span> <span class="dot">·</span>
+          <span class="t">Damnation</span> <span class="dot">·</span>
+          <span class="t">Burger Island</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Teaching &amp; Reach</h3>
+        <div class="stat"><span>ArtStation followers</span><span class="v"><a href="https://www.artstation.com/hugobeyer" target="_blank" rel="noopener">9.3K</a></span></div>
+        <div class="stat"><span>YouTube subscribers</span><span class="v"><a href="https://www.youtube.com/@hugobeyer" target="_blank" rel="noopener">2.79K</a></span></div>
+        <div class="stat"><span>Gumroad sales</span><span class="v"><a href="https://hugobeyer.gumroad.com/" target="_blank" rel="noopener">1,900+</a></span></div>
+        <div class="stat"><span>Gumroad revenue</span><span class="v">$35K+</span></div>
+        <div class="stat"><span>Top tutorial</span><span class="v"><a href="https://hugobeyer.gumroad.com/l/cQzPk" target="_blank" rel="noopener">Rock Butte · 456</a></span></div>
+        <div class="stat"><span>Press</span><span class="v">PC Games (RU)</span></div>
+      </div>
+
+      <div class="card">
+        <h3>Personal Project</h3>
+        <div style="font-size: 13px; color: var(--soft);">
+          <div><strong style="color: var(--text)">Rooftop Run</strong> — in development</div>
+          <div style="color: var(--muted); margin-top: 4px;">Solo indie (Unity). Stylized rooftop runner. Authoring systems, environment, and tooling end-to-end.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Links</h3>
+        <ul class="simple">
+          <li><a href="https://www.artstation.com/hugobeyer" target="_blank" rel="noopener">ArtStation</a></li>
+          <li><a href="https://www.linkedin.com/in/hugobeyer/" target="_blank" rel="noopener">LinkedIn</a></li>
+          <li><a href="https://www.youtube.com/@hugobeyer" target="_blank" rel="noopener">YouTube</a></li>
+          <li><a href="https://hugobeyer.gumroad.com/" target="_blank" rel="noopener">Gumroad</a></li>
+          <li><a href="mailto:hugobeyer@gmail.com">hugobeyer@gmail.com</a></li>
+        </ul>
+      </div>
+
+    </aside>
+
+  </div>
+
+  <footer class="note">
+    // updated 2026-04 &nbsp;·&nbsp; hugobeyer.github.io/resume
+  </footer>
+
+</main>
 
 </body>
-
 </html>
