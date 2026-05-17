@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Banner Roland XPS-30</title>
+</head>
+<body style="margin:24px;background:#101010">
+<!-- Banner compacto 500x100. Clique leva para gallery.html -->
+<a class="xps30-banner" href="gallery.html" aria-label="Abrir galeria Roland XPS-30">
+  <span class="xps30-photo">
+    <img src="images/banner_01.jpg" alt="Roland XPS-30 foto 1">
+    <img src="images/banner_02.jpg" alt="Roland XPS-30 foto 2">
+    <img src="images/banner_03.jpg" alt="Roland XPS-30 foto 3">
+    <img src="images/banner_04.jpg" alt="Roland XPS-30 foto 4">
+    <img src="images/banner_05.jpg" alt="Roland XPS-30 foto 5">
+    <img src="images/banner_06.jpg" alt="Roland XPS-30 foto 6">
+  </span>
+
+  <span class="xps30-info">
+    <strong>ROLAND XPS-30</strong>
+    <em>R$ 5.700 negociável</em>
+    <small>Comprado na Drumshop • Caixa original • Fonte e manuais inclusos</small>
+    <b>Hugo • hugobeyer@gmail.com • Whats: (41) 98846-5199</b>
+  </span>
+</a>
+
+<style>
+.xps30-banner{
+  width:500px;
+  height:100px;
+  display:flex;
+  overflow:hidden;
+  background:#171717;
+  color:#fff;
+  border:1px solid #333;
+  border-radius:8px;
+  text-decoration:none;
+  font-family:Arial,Helvetica,sans-serif;
+  box-sizing:border-box;
+}
+.xps30-photo{
+  width:170px;
+  height:100px;
+  position:relative;
+  flex:0 0 170px;
+  overflow:hidden;
+  background:#000;
+}
+.xps30-photo img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:0;
+  animation:xps30Fade 18s infinite;
+}
+.xps30-photo img:nth-child(1){animation-delay:0s}
+.xps30-photo img:nth-child(2){animation-delay:3s}
+.xps30-photo img:nth-child(3){animation-delay:6s}
+.xps30-photo img:nth-child(4){animation-delay:9s}
+.xps30-photo img:nth-child(5){animation-delay:12s}
+.xps30-photo img:nth-child(6){animation-delay:15s}
+
+@keyframes xps30Fade{
+  0%{opacity:0}
+  5%{opacity:1}
+  17%{opacity:1}
+  22%{opacity:0}
+  100%{opacity:0}
+}
+
+.xps30-info{
+  padding:7px 9px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:2px;
+  min-width:0;
+}
+.xps30-info strong{
+  font-size:16px;
+  line-height:1;
+  letter-spacing:.2px;
+}
+.xps30-info em{
+  font-size:14px;
+  font-style:normal;
+  font-weight:700;
+  color:#9cff9c;
+}
+.xps30-info small{
+  font-size:11px;
+  line-height:1.15;
+  color:#d2d2d2;
+}
+.xps30-info b{
+  font-size:10.5px;
+  line-height:1.1;
+  font-weight:400;
+  color:#fff;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+</style>
+
+</body>
+</html>
